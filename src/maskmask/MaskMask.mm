@@ -15,11 +15,12 @@ namespace mm {
     
     //--------------------------------------------------------------
     Shape::Shape(){
-        setMode(ofPath::POLYLINES);
-        setFillColor(SHAPE_COLOR);
+        path.setMode(ofPath::POLYLINES);
+        path.setFillColor(SHAPE_COLOR);
         selected = NULL;
         bMouseDown = false;
         bShapeSelected = false;
+        bChanged = false;
     }
     
     //--------------------------------------------------------------
@@ -28,23 +29,57 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Shape::draw( mm::Mode drawMode ){
-        tessellate();
-        
+        if ( bChanged ){
+            path.clear();
+            path.setMode(ofPath::POLYLINES);
+            
+            int ind = 0;
+            for ( auto & p : points ){
+                if ( ind == 0 ){
+                    path.lineTo(p);
+                } else {
+                    if ( p.bUseBezier ){
+                        path.bezierTo(p.bezierA, p.bezierB, p);
+                    } else {
+                        path.lineTo(p);
+                    }
+                }
+                ind++;
+            }
+            if ( points.size() != 0 ){
+                auto & p = points[0];
+                if ( p.bUseBezier ){
+                    path.bezierTo(p.bezierA, p.bezierB, p);
+                } else {
+//                    path.lineTo(p);
+                }
+                path.close();
+            }
+            bChanged  = false;
+        }
         ofPushMatrix();
-        ofTranslate(*this);
-        ofPath::draw();
+        path.draw();
         
         if ( drawMode == MODE_EDIT_SHAPE || drawMode == MODE_EDIT ){
             if ( bShapeSelected ){
-                setFillColor(SHAPE_COLOR_SELECTED);
+                path.setFillColor(SHAPE_COLOR_SELECTED);
             } else {
-                setFillColor(SHAPE_COLOR);
+                path.setFillColor(SHAPE_COLOR);
             }
-            for ( auto & path : getOutline() ){
-                for (auto & v : path.getVertices() ){
-                    ofRect(v, SHAPE_SQUARE_SIZE, SHAPE_SQUARE_SIZE);
+            
+            ofPushStyle();
+            bool bFlip = true;
+            for (auto & v : points ){
+                ofSetColor(bFlip ? SHAPE_SQUARE_COLOR_A : SHAPE_SQUARE_COLOR_B );
+                ofRect(v, SHAPE_SQUARE_SIZE, SHAPE_SQUARE_SIZE);
+                if ( v.bUseBezier ){
+                    ofSetColor(bFlip ? SHAPE_BEZIER_COLOR_A : SHAPE_BEZIER_COLOR_B);
+                    ofRect(v.bezierA, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
+                    ofRect(v.bezierB, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
                 }
+                bFlip = !bFlip;
             }
+            ofPopStyle();
             if ( selected != NULL ){
                 ofRect(*selected, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
             }
@@ -55,45 +90,57 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Shape::addVertex(ofVec2f & p ){
-        setMode(ofPath::POLYLINES);
-        lineTo(p);
+        points.push_back(Point());
+        points.back().set(p);
+        points.back().bezierA.set(p);
+        points.back().bezierB.set(p);
+        bChanged = true;
     }
     
     //--------------------------------------------------------------
     void Shape::deleteSelected(){
         if ( selected != NULL ){
-            for ( auto & path : getOutline() ){
-                auto & verts = path.getVertices();
-                for ( int i=0; i<verts.size(); i++){
-                    if ( verts[i] == *selected){
-                        verts.erase(verts.begin() + i );
-                        selected = NULL;
-                        flagShapeChanged();
-                        break;
-                    }
+            for ( int i=0; i<points.size(); i++){
+                if ( points[i] == *selected){
+                    points.erase(points.begin() + i );
+                    selected = NULL;
+                    bChanged = true;
+                    break;
                 }
             }
         }
     }
     
     //--------------------------------------------------------------
+    void Shape::close(){
+        path.close();
+    }
+    
+    //--------------------------------------------------------------
     bool Shape::mousePressed( ofMouseEventArgs & e ){
         bool bFound = false;
-        for ( auto & path : getOutline() ){
-            for (auto & v : path.getVertices() ){
-                if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
-                    selected = &v;
-                    bFound = true;
+        for ( auto & v : points ){
+            if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
+                selected = &v;
+                if ( ofGetKeyPressed( MM_KEY_BEZIER )){
+                    v.bUseBezier = !v.bUseBezier;
+                    bChanged = true;
                 }
+                bFound = true;
+            } else if ( v.bezierA.distance(e) < SHAPE_SQUARE_SIZE ){
+                selected = &v.bezierA;
+                bFound = true;
+            } else if ( v.bezierB.distance(e) < SHAPE_SQUARE_SIZE ){
+                selected = &v.bezierB;
+                bFound = true;
             }
         }
         if ( !bFound ){
             selected = NULL;
-            if ( getOutline().size() > 0 ){
-                if ( getOutline()[0].inside(e.x,e.y) ){
+            if ( path.getOutline().size() > 0 ){
+                if ( path.getOutline()[0].inside(e.x,e.y) ){
                     bShapeSelected = true;
                     pointPressed.set(e.x,e.y);
-                    originalCenter = getOutline()[0].getCentroid2D();
                     bFound = true;
                 } else {
                     bShapeSelected = false;
@@ -110,9 +157,14 @@ namespace mm {
     void Shape::mouseDragged( ofMouseEventArgs & e ){
         if ( selected != NULL && bMouseDown ){
             selected->set(e);
-            flagShapeChanged();
+            bChanged = true;
         } else if ( bShapeSelected ){
-            translate(e-pointPressed);
+            for ( auto & p : points ){
+                p += (e-pointPressed);
+                p.bezierA += (e-pointPressed);
+                p.bezierB += (e-pointPressed);
+            }
+            bChanged = true;
             pointPressed.set(e.x,e.y);
         }
     }
@@ -127,12 +179,10 @@ namespace mm {
     //--------------------------------------------------------------
     void Shape::mouseMoved( ofMouseEventArgs & e ){
         bool bFound = false;
-        for ( auto & path : getOutline() ){
-            for (auto & v : path.getVertices() ){
-                if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
-                    selected = &v;
-                    bFound = true;
-                }
+        for ( auto & v : points ){
+            if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
+                selected = &v;
+                bFound = true;
             }
         }
         if ( !bFound ) selected = NULL;

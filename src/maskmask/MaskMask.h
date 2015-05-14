@@ -19,13 +19,21 @@ namespace mm {
         MODE_EDIT
     };
     
-    class Shape : public ofPath, public ofVec3f {
+    class Point : public ofVec3f {
+    public:
+        Point(){ bUseBezier = false; };
+        ofVec3f bezierA, bezierB;
+        bool bUseBezier;
+    };
+    
+    class Shape {
     public:
         Shape();
         ~Shape();
         void draw( mm::Mode drawMode );
         void addVertex(ofVec2f & p );
         void deleteSelected();
+        void close();
         
         bool mousePressed( ofMouseEventArgs & e );
         void mouseDragged( ofMouseEventArgs & e );
@@ -36,6 +44,11 @@ namespace mm {
         ofVec3f * selected;
         ofVec2f pointPressed, originalCenter; // where shape was clicked
         bool bMouseDown, bShapeSelected;
+        
+        vector<Point> points;
+        
+        ofPath path;
+        bool bChanged;
     };
     
     class Manager {
