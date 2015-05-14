@@ -1,13 +1,19 @@
 #include "ofApp.h"
+#include "ofxCocoa.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    ofBackground(ofColor(0,0));
+    
+    [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:YES];
+    
+    ofSetDataPathRoot("../Resources/");
+    
+    manager.setup();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
 }
 
 //--------------------------------------------------------------
