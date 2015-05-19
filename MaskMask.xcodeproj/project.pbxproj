@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		012386001B0BACAA0012EBF5 /* cursors in Resources */ = {isa = PBXBuildFile; fileRef = 012385FF1B0BACAA0012EBF5 /* cursors */; };
+		012386041B0BC7790012EBF5 /* Shape.mm in Sources */ = {isa = PBXBuildFile; fileRef = 012386021B0BC7790012EBF5 /* Shape.mm */; };
 		019424B51B051FE60005861A /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = 019424B41B051FDE0005861A /* shaders */; };
 		019BB0D51B04FF8D00080418 /* MaskMask.mm in Sources */ = {isa = PBXBuildFile; fileRef = 019BB0D41B04FF8D00080418 /* MaskMask.mm */; };
 		01B829B41AF2B59800C1FDF7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B829B31AF2B59800C1FDF7 /* Carbon.framework */; };
@@ -74,6 +75,8 @@
 
 /* Begin PBXFileReference section */
 		012385FF1B0BACAA0012EBF5 /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
+		012386021B0BC7790012EBF5 /* Shape.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Shape.mm; path = maskmask/Shape.mm; sourceTree = "<group>"; };
+		012386031B0BC7790012EBF5 /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shape.h; path = maskmask/Shape.h; sourceTree = "<group>"; };
 		019424B01B05171E0005861A /* MMConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MMConstants.h; path = maskmask/MMConstants.h; sourceTree = "<group>"; };
 		019424B41B051FDE0005861A /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = shaders; sourceTree = "<group>"; };
 		019BB0D31B04FF4500080418 /* MaskMask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MaskMask.h; path = maskmask/MaskMask.h; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 				019BB0D31B04FF4500080418 /* MaskMask.h */,
 				019BB0D41B04FF8D00080418 /* MaskMask.mm */,
 				019424B01B05171E0005861A /* MMConstants.h */,
+				012386021B0BC7790012EBF5 /* Shape.mm */,
+				012386031B0BC7790012EBF5 /* Shape.h */,
 			);
 			name = maskmask;
 			sourceTree = "<group>";
@@ -403,6 +408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.mm in Sources */,
+				012386041B0BC7790012EBF5 /* Shape.mm in Sources */,
 				019BB0D51B04FF8D00080418 /* MaskMask.mm in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.mm in Sources */,
 				44700308C06A2C12A26F0D91 /* AppDelegate.mm in Sources */,

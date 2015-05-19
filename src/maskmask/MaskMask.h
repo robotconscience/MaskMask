@@ -9,44 +9,11 @@
 #pragma once
 
 #include "ofMain.h"
-#import "MMConstants.h"
+#include "MMConstants.h"
+#include "Shape.h"
 #import "StatusbarDelegate.h"
 
 namespace mm {
-    
-    class Point : public ofVec3f {
-    public:
-        Point(){ bUseBezier = false; };
-        ofVec3f bezierA, bezierB;
-        bool bUseBezier;
-    };
-    
-    class Shape {
-    public:
-        Shape();
-        ~Shape();
-        void draw( mm::Mode drawMode );
-        void addVertex(ofVec2f & p );
-        void deleteSelected();
-        void close();
-        
-        bool mousePressed( ofMouseEventArgs & e, bool bDelete = false );
-        void mouseDragged( ofMouseEventArgs & e );
-        void mouseReleased( ofMouseEventArgs & e );
-        void mouseMoved( ofMouseEventArgs & e );
-        
-        bool shouldDelete();
-        
-    protected:
-        ofVec3f * selected;
-        ofVec2f pointPressed, originalCenter; // where shape was clicked
-        bool bMouseDown, bShapeSelected;
-        
-        vector<Point> points;
-        
-        ofPath path;
-        bool bChanged, bKillMe;
-    };
     
     class Manager {
     public:
