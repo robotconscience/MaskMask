@@ -6,7 +6,7 @@
 //
 //
 
-#include "MaskMask.h"
+#include "Manager.h"
 #include "ofxCocoa.h"
 
 namespace mm {
