@@ -21,6 +21,7 @@ namespace mm {
         bMouseDown = false;
         bShapeSelected = false;
         bChanged = false;
+        bKillMe = false;
     }
     
     //--------------------------------------------------------------
@@ -60,7 +61,7 @@ namespace mm {
         ofPushMatrix();
         path.draw();
         
-        if ( drawMode == MODE_EDIT_SHAPE || drawMode == MODE_EDIT ){
+        if ( drawMode == MODE_ADD || drawMode == MODE_EDIT ){
             if ( bShapeSelected ){
                 path.setFillColor(SHAPE_COLOR_SELECTED);
             } else {
@@ -112,44 +113,77 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
+    bool Shape::shouldDelete(){
+        return bKillMe;
+    }
+    
+    //--------------------------------------------------------------
     void Shape::close(){
         path.close();
     }
     
     //--------------------------------------------------------------
-    bool Shape::mousePressed( ofMouseEventArgs & e ){
+    bool Shape::mousePressed( ofMouseEventArgs & e, bool bDelete ){
         bool bFound = false;
-        for ( auto & v : points ){
-            if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
-                selected = &v;
-                if ( ofGetKeyPressed( MM_KEY_BEZIER )){
-                    v.bUseBezier = !v.bUseBezier;
-                    bChanged = true;
-                }
-                bFound = true;
-            } else if ( v.bezierA.distance(e) < SHAPE_SQUARE_SIZE ){
-                selected = &v.bezierA;
-                bFound = true;
-            } else if ( v.bezierB.distance(e) < SHAPE_SQUARE_SIZE ){
-                selected = &v.bezierB;
-                bFound = true;
-            }
-        }
-        if ( !bFound ){
-            selected = NULL;
-            if ( path.getOutline().size() > 0 ){
-                if ( path.getOutline()[0].inside(e.x,e.y) ){
-                    bShapeSelected = true;
-                    pointPressed.set(e.x,e.y);
+        if ( bDelete ){
+            for ( auto & v : points ){
+                if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
+                    selected = &v;
                     bFound = true;
+                    break;
+                }
+            }
+            if ( bFound ){
+                deleteSelected();
+            } else {
+                selected = NULL;
+                if ( path.getOutline().size() > 0 ){
+                    if ( path.getOutline()[0].inside(e.x,e.y) ){
+                        bShapeSelected = true;
+                        pointPressed.set(e.x,e.y);
+                        bFound = true;
+                        bKillMe = true;
+                    } else {
+                        bShapeSelected = false;
+                    }
                 } else {
                     bShapeSelected = false;
                 }
-            } else {
-                bShapeSelected = false;
             }
+            
+        } else {
+            for ( auto & v : points ){
+                if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
+                    selected = &v;
+                    if ( ofGetKeyPressed( MM_KEY_BEZIER )){
+                        v.bUseBezier = !v.bUseBezier;
+                        bChanged = true;
+                    }
+                    bFound = true;
+                } else if ( v.bezierA.distance(e) < SHAPE_SQUARE_SIZE ){
+                    selected = &v.bezierA;
+                    bFound = true;
+                } else if ( v.bezierB.distance(e) < SHAPE_SQUARE_SIZE ){
+                    selected = &v.bezierB;
+                    bFound = true;
+                }
+            }
+            if ( !bFound ){
+                selected = NULL;
+                if ( path.getOutline().size() > 0 ){
+                    if ( path.getOutline()[0].inside(e.x,e.y) ){
+                        bShapeSelected = true;
+                        pointPressed.set(e.x,e.y);
+                        bFound = true;
+                    } else {
+                        bShapeSelected = false;
+                    }
+                } else {
+                    bShapeSelected = false;
+                }
+            }
+            bMouseDown = true;
         }
-        bMouseDown = true;
         return bFound;
     }
     
@@ -192,8 +226,9 @@ namespace mm {
     
     //--------------------------------------------------------------
     Manager::Manager(){
-        currentMode = MODE_EDIT_SHAPE; // todo: should be tied to a "first time" setting
+        currentMode = MODE_ADD; // todo: should be tied to a "first time" setting
         bNeedToResize = false;
+        bAddCursor = false;
     }
     
     //--------------------------------------------------------------
@@ -221,6 +256,21 @@ namespace mm {
         ofAddListener(statusMenu.onReload, this, &Manager::onReload);
         ofAddListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
+        // build cursor images
+        @autoreleasepool {
+            NSImage *addImage, *delImage, *editImageA, *editImageB;
+            addImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_add.pdf").c_str()]];
+            delImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_delete.pdf").c_str()]];
+            editImageA = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_edit.pdf").c_str()]];
+            editImageB = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_edit_m.pdf").c_str()]];
+            
+            cursorStandard = [NSCursor arrowCursor];
+            cursorAdd = [[NSCursor alloc] initWithImage:addImage hotSpot:NSMakePoint(0,0) ];
+            cursorEditA = [[NSCursor alloc] initWithImage:editImageA hotSpot:NSMakePoint(0,0) ];
+            cursorEditD = [[NSCursor alloc] initWithImage:editImageB hotSpot:NSMakePoint(0,0) ];
+            cursorDel = [[NSCursor alloc] initWithImage:delImage hotSpot:NSMakePoint(0,0) ];
+        }
+    
         // load render shader
         renderShader.load("", ofToDataPath("shaders/render.frag"));
         renderFbo.allocate(ofGetWidth(), ofGetHeight());
@@ -243,6 +293,15 @@ namespace mm {
         if ( bNeedToResize ){
             renderFbo.allocate(ofGetWidth(), ofGetHeight());
         }
+        
+        // clean up shapes
+        mux.lock();
+        for ( auto & it : shapes ){
+            if (it.second.shouldDelete() ){
+                shapes.erase(it.first);
+            }
+        }
+        mux.unlock();
     }
     
     //--------------------------------------------------------------
@@ -251,17 +310,17 @@ namespace mm {
         ofClear(0);
         ofSetColor(255);
         switch( currentMode ){
-            case MODE_EDIT_SHAPE:
-                ofDrawBitmapString("EDIT SHAPE", 20,100);
+            case MODE_WELCOME:
+                break;
+            case MODE_ADD:
                 break;
             case MODE_RENDER:
                 break;
             case MODE_EDIT:
-                ofDrawBitmapString("EDIT", 20,100);
+                break;
+            case MODE_EDIT_DEL:
                 break;
         }
-        
-//        cout << shapes.size() << endl;
         
         if ( shapes.size() > 0 ){
             for ( auto & it : shapes ){
@@ -312,6 +371,8 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::keyPressed( ofKeyEventArgs & e ){
         switch (currentMode) {
+            case MODE_WELCOME:
+                break;
             case MODE_EDIT:
             {
                 if ( e.key == OF_KEY_DEL || e.key == OF_KEY_BACKSPACE ){
@@ -324,7 +385,7 @@ namespace mm {
             }
                 break;
                 
-            case MODE_EDIT_SHAPE:
+            case MODE_ADD:
             {
                 if ( e.key == OF_KEY_RETURN){
                     setMode(MODE_EDIT);
@@ -341,7 +402,9 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::mousePressed( ofMouseEventArgs & e ){
         switch (currentMode) {
-            case MODE_EDIT_SHAPE:
+            case MODE_WELCOME:
+                break;
+            case MODE_ADD:
                 if ( currentShape != NULL ){
                     currentShape->addVertex(e);
                 } else {
@@ -368,6 +431,15 @@ namespace mm {
                     }
                 }
                 break;
+            
+                
+            case MODE_EDIT_DEL:
+                if ( shapes.size() > 0 ){
+                    for ( auto & it : shapes ){
+                        if ( it.second.mousePressed(e, true) ) break;
+                    }
+                }
+                break;
                 
             case MODE_RENDER:
                 break;
@@ -377,7 +449,9 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::mouseDragged( ofMouseEventArgs & e ){
         switch (currentMode) {
-            case MODE_EDIT_SHAPE:
+            case MODE_WELCOME:
+                break;
+            case MODE_ADD:
                 break;
                 
             case MODE_EDIT:
@@ -396,7 +470,9 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::mouseReleased( ofMouseEventArgs & e ){
         switch (currentMode) {
-            case MODE_EDIT_SHAPE:
+            case MODE_WELCOME:
+                break;
+            case MODE_ADD:
                 break;
                 
             case MODE_EDIT:
@@ -415,7 +491,9 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::mouseMoved( ofMouseEventArgs & e ){
         switch (currentMode) {
-            case MODE_EDIT_SHAPE:
+            case MODE_WELCOME:
+                break;
+            case MODE_ADD:
                 break;
                 
             case MODE_EDIT:
@@ -468,20 +546,56 @@ namespace mm {
         currentMode = newMode;
         
         switch (newMode) {
+            case MODE_WELCOME:
+                break;
             case MODE_EDIT:
                 if ( currentShape != NULL ){
                     currentShape->close();
                     currentShape = NULL;
                 }
                 [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:NO];
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorEditA];
+                [cursorEditA set];
                 break;
-            case MODE_EDIT_SHAPE:
+            case MODE_ADD:
                 [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:NO];
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorAdd];
+                [cursorAdd set];
                 break;
                 
             case MODE_RENDER:
                 currentShape = NULL;
                 [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:YES];
+                
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorStandard];
+                [cursorStandard set];
+                break;
+        }
+        
+        // set cursor
+        switch (currentMode) {
+            case MODE_WELCOME:
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorStandard];
+                [cursorStandard set];
+                break;
+            case MODE_EDIT:
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorEditA];
+                [cursorEditA set];
+                break;
+                
+            case MODE_EDIT_DEL:
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorEditD];
+                [cursorEditD set];
+                break;
+                
+            case MODE_ADD:
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorAdd];
+                [cursorAdd set];
+                break;
+                
+            case MODE_RENDER:
+                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorStandard];
+                [cursorStandard set];
                 break;
         }
     }

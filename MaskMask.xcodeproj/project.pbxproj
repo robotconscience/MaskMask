@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		012386001B0BACAA0012EBF5 /* cursors in Resources */ = {isa = PBXBuildFile; fileRef = 012385FF1B0BACAA0012EBF5 /* cursors */; };
 		019424B51B051FE60005861A /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = 019424B41B051FDE0005861A /* shaders */; };
 		019BB0D51B04FF8D00080418 /* MaskMask.mm in Sources */ = {isa = PBXBuildFile; fileRef = 019BB0D41B04FF8D00080418 /* MaskMask.mm */; };
 		01B829B41AF2B59800C1FDF7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B829B31AF2B59800C1FDF7 /* Carbon.framework */; };
@@ -72,6 +73,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		012385FF1B0BACAA0012EBF5 /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
 		019424B01B05171E0005861A /* MMConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MMConstants.h; path = maskmask/MMConstants.h; sourceTree = "<group>"; };
 		019424B41B051FDE0005861A /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = shaders; sourceTree = "<group>"; };
 		019BB0D31B04FF4500080418 /* MaskMask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MaskMask.h; path = maskmask/MaskMask.h; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 		01E82E2E1AF2CBA200DA55CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				012385FF1B0BACAA0012EBF5 /* cursors */,
 				019424B41B051FDE0005861A /* shaders */,
 				01E82E341AF2CC1D00DA55CF /* icon_task_white.png */,
 				01E82E2F1AF2CBA200DA55CF /* icon_task_black.png */,
@@ -372,6 +375,7 @@
 				01E82E351AF2CC1D00DA55CF /* icon_task_white.png in Resources */,
 				01E82E331AF2CBAD00DA55CF /* icon_task_black.png in Resources */,
 				019424B51B051FE60005861A /* shaders in Resources */,
+				012386001B0BACAA0012EBF5 /* cursors in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

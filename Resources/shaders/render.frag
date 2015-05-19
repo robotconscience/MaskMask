@@ -5,7 +5,7 @@
  MASK MASK shader
  *  Takes in a color (ko_color), a texture (tex0),
     and a mode (mode, duh) and either passes through
-    the texture as-is (mode 1) or renders pixels based
+    the texture as-is (mode 2+) or renders pixels based
     on the KO color: clear if KO color, black otherwise
 ************************************************************/
 
@@ -15,7 +15,7 @@ uniform int mode;
 
 void main(){
     // "render"
-    if ( mode == 0 ){
+    if ( mode == 1 ){
         vec4 texColor = texture2DRect(tex0, gl_TexCoord[0].st);
         if ( texColor == ko_color ) texColor = vec4(0,0,0,0);
         else texColor = vec4(0,0,0,1);

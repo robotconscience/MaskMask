@@ -22,4 +22,17 @@ namespace mm {
     static const ofColor SHAPE_COLOR_SELECTED(255,255,0,150);
     
     static const char MM_KEY_BEZIER = 'z';
+    
+    // App Mode
+    enum Mode {
+        MODE_WELCOME = 0,
+        MODE_RENDER,
+        MODE_ADD,
+        MODE_EDIT_DEL,
+        MODE_EDIT,
+    };
+    
+    // cursors
+    
+    static NSCursor * cursorStandard, *cursorAdd, *cursorEditA, *cursorEditD, *cursorDel;
 }

@@ -13,11 +13,6 @@
 #import "StatusbarDelegate.h"
 
 namespace mm {
-    enum Mode {
-        MODE_RENDER = 0,
-        MODE_EDIT_SHAPE,
-        MODE_EDIT
-    };
     
     class Point : public ofVec3f {
     public:
@@ -35,10 +30,12 @@ namespace mm {
         void deleteSelected();
         void close();
         
-        bool mousePressed( ofMouseEventArgs & e );
+        bool mousePressed( ofMouseEventArgs & e, bool bDelete = false );
         void mouseDragged( ofMouseEventArgs & e );
         void mouseReleased( ofMouseEventArgs & e );
         void mouseMoved( ofMouseEventArgs & e );
+        
+        bool shouldDelete();
         
     protected:
         ofVec3f * selected;
@@ -48,7 +45,7 @@ namespace mm {
         vector<Point> points;
         
         ofPath path;
-        bool bChanged;
+        bool bChanged, bKillMe;
     };
     
     class Manager {
@@ -93,5 +90,9 @@ namespace mm {
         
         // switches
         bool bNeedToResize; // set when window resizes
+        bool bAddCursor;    // in edit mode, show 'add' or 'subtract'
+        
+        // important stuff
+        ofMutex mux;
     };
 }
