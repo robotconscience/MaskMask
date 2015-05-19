@@ -65,6 +65,9 @@ namespace mm {
             cursorDel = [[NSCursor alloc] initWithImage:delImage hotSpot:NSMakePoint(0,0) ];
         }
     
+        // load settings
+        onReload();
+        
         // load render shader
         renderShader.load("", ofToDataPath("shaders/render.frag"));
         renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
@@ -172,6 +175,17 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::keyPressed( ofKeyEventArgs & e ){
+        // major key combos
+        if ( e.key == OF_KEY_TAB ){
+            onMode();
+            return;
+        } if ( ofGetKeyPressed( OF_KEY_SUPER )){
+            if ( e.key == 's' ){
+                onSave();
+            }
+        }
+        
+        // mode stuff
         switch (currentMode) {
             case MODE_WELCOME:
                 break;
@@ -337,12 +351,79 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::onSave(){
+        ofXml xmlOut;
+        xmlOut.addChild("shapes");
+        xmlOut.setToChild(0);
         
+        int child = 0;
+        
+        for ( auto & s : shapes ){
+            xmlOut.addChild("shape");
+            xmlOut.setToChild(child);
+            int index = 0;
+            for ( auto & p : s.second.getPoints()){
+                xmlOut.addChild("point");
+                xmlOut.setToChild(index);
+                xmlOut.addValue("x", p.x);
+                xmlOut.addValue("y", p.y);
+                xmlOut.addValue("isBezier", p.bUseBezier);
+                xmlOut.addValue("b1x", p.bezierA.x);
+                xmlOut.addValue("b1y", p.bezierA.y);
+                xmlOut.addValue("b2x", p.bezierB.x);
+                xmlOut.addValue("b2y", p.bezierB.y);
+                xmlOut.setToParent();
+                
+                index++;
+            }
+            xmlOut.setToParent();
+            child++;
+        }
+        
+        if ( !ofDirectory(ofToDataPath("settings")).exists() ){
+            ofDirectory dir(ofToDataPath("settings"));
+            dir.create();
+        }
+        xmlOut.save(ofToDataPath("settings/settings.xml"));
     }
     
     //--------------------------------------------------------------
     void Manager::onReload(){
-        
+        ofXml xml;
+        if ( xml.load(ofToDataPath("settings/settings.xml"))){
+//            xml.setToChild(0);
+            int nShapes = xml.getNumChildren();
+            for ( int i=0; i<nShapes; i++){
+                createShape();
+            }
+            
+            int shapeIndex = 0;
+            for ( auto & s : shapes ){
+                xml.setToChild(shapeIndex);
+                
+                int vIndex = 0;
+                int nVerts = xml.getNumChildren();
+                for ( int i=0; i<nVerts; i++){
+                    xml.setToChild(i);
+                    
+                    float x = xml.getValue("x", 0.f);
+                    float y = xml.getValue("y", 0.f);
+                    s.second.addVertex(ofVec2f(x,y));
+                    
+                    x = xml.getValue("b1x", 0.);
+                    y = xml.getValue("b1y", 0.);
+                    s.second.getPoints()[i].bezierA.set(x,y);
+                    x = xml.getValue("b2x", 0.);
+                    y = xml.getValue("b2y", 0.);
+                    s.second.getPoints()[i].bezierB.set(x,y);
+                    s.second.getPoints()[i].bUseBezier = xml.getValue("isBezier", false);
+                    xml.setToParent();
+                }
+                
+                xml.setToParent();
+                currentShape = &s.second;
+            }
+            xml.setToParent();
+        }
     }
     
     //--------------------------------------------------------------

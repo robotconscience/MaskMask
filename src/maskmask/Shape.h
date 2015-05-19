@@ -25,7 +25,7 @@ namespace mm {
         Shape();
         ~Shape();
         void draw( mm::Mode drawMode );
-        void addVertex(ofVec2f & p );
+        void addVertex(ofVec2f p );
         void deleteSelected();
         void close();
         
@@ -35,6 +35,8 @@ namespace mm {
         void mouseMoved( ofMouseEventArgs & e, mm::Mode mode = MODE_RENDER );
         
         bool shouldDelete();
+        
+        vector<Point> & getPoints();
         
     protected:
         ofVec3f * selected;

@@ -93,7 +93,7 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Shape::addVertex(ofVec2f & p ){
+    void Shape::addVertex(ofVec2f p ){
         points.push_back(Point());
         points.back().set(p);
         points.back().bezierA.set(p);
@@ -113,6 +113,11 @@ namespace mm {
                 }
             }
         }
+    }
+    
+    //--------------------------------------------------------------
+    vector<Point> & Shape::getPoints(){
+        return points;
     }
     
     //--------------------------------------------------------------
