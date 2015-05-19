@@ -32,7 +32,57 @@ namespace mm {
         MODE_EDIT,
     };
     
-    // cursors
+    static string getModeAsString( Mode mode ){
+        switch( mode ){
+            case MODE_WELCOME:
+                return "Welcome";
+            case MODE_RENDER:
+                return "Render";
+            case MODE_ADD:
+                return "Add";
+            case MODE_EDIT_DEL:
+                return "Delete";
+            case MODE_EDIT:
+                return "Edit";
+            default:
+                return "";
+        }
+    }
     
+    // cursors
     static NSCursor * cursorStandard, *cursorAdd, *cursorEditA, *cursorEditD, *cursorDel;
+    
+    // toolbar
+    static const ofColor TOOLBAR_BG_COLOR( ofColor::fromHex(0x6db4d6) );
+    
+    static const string TOOLBAR_FONT = "fonts/maax.otf";
+    static const string TOOLBAR_FONT_BOLD = "fonts/maaxbold.otf";
+
+    static const int TOOLBAR_FONT_SIZE = 15;
+    static const int TOOLBAR_PADDING = 15;
+    static const int TOOLBAR_TOOL_SIZE = 40;
+    
+    // phontz
+    class FontManager {
+    public:
+        static FontManager & get(){
+            static FontManager me;
+            if ( !me.fontBold.isLoaded()){
+                me.fontBold.loadFont( ofToDataPath(TOOLBAR_FONT_BOLD), TOOLBAR_FONT_SIZE );
+            }
+            
+            if ( !me.font.isLoaded()){
+                me.font.loadFont( ofToDataPath(TOOLBAR_FONT), TOOLBAR_FONT_SIZE );
+            }
+            return me;
+        }
+        
+        ofTrueTypeFont font, fontBold;
+
+    protected:
+        
+        FontManager(){
+            
+        }
+    };
 }

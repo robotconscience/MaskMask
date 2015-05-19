@@ -11,6 +11,7 @@
 #include "ofMain.h"
 #include "MMConstants.h"
 #include "Shape.h"
+#include "ToolBar.h"
 #include "StatusbarDelegate.h"
 
 namespace mm {
@@ -43,6 +44,7 @@ namespace mm {
         void onSave();
         void onReload();
         void onMode();
+        void onChangeMode( Mode & m );
         
         StatusBar statusMenu;
         
@@ -54,6 +56,9 @@ namespace mm {
         // shapes
         std::map<int, Shape> shapes;
         Shape * currentShape;
+        
+        // toolz
+        ToolBar toolBar;
         
         // switches
         bool bNeedToResize; // set when window resizes

@@ -13,7 +13,7 @@ int main()
     initSettings.isOpaque				= false;
     initSettings.windowLevel			= NSScreenSaverWindowLevel;
     initSettings.hasWindowShadow		= false;
-    initSettings.numFSAASamples			= 4;
+    initSettings.numFSAASamples			= 8;
     initSettings.windowMode				= OF_WINDOW;
     initSettings.windowStyle			= NSBorderlessWindowMask;
     initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();

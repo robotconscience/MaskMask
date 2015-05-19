@@ -26,7 +26,8 @@ namespace mm {
         ofRemoveListener(statusMenu.onReload, this, &Manager::onReload);
         ofRemoveListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
-        // get this show on the road
+        ofRemoveListener(toolBar.onChangeTool, this, &Manager::onChangeMode);
+        
         ofRemoveListener(ofEvents().update, this, &Manager::update);
         ofRemoveListener(ofEvents().draw, this, &Manager::draw);
         
@@ -45,6 +46,10 @@ namespace mm {
         ofAddListener(statusMenu.onReload, this, &Manager::onReload);
         ofAddListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
+        // build tool bar
+        toolBar.setup();
+        ofAddListener(toolBar.onChangeTool, this, &Manager::onChangeMode);
+        
         // build cursor images
         @autoreleasepool {
             NSImage *addImage, *delImage, *editImageA, *editImageB;
@@ -62,7 +67,7 @@ namespace mm {
     
         // load render shader
         renderShader.load("", ofToDataPath("shaders/render.frag"));
-        renderFbo.allocate(ofGetWidth(), ofGetHeight());
+        renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
         
         // get this show on the road
         ofAddListener(ofEvents().update, this, &Manager::update);
@@ -80,7 +85,7 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::update(ofEventArgs & e ){
         if ( bNeedToResize ){
-            renderFbo.allocate(ofGetWidth(), ofGetHeight());
+            renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
         }
         
         // clean up shapes
@@ -88,6 +93,7 @@ namespace mm {
         for ( auto & it : shapes ){
             if (it.second.shouldDelete() ){
                 shapes.erase(it.first);
+                break;
             }
         }
         mux.unlock();
@@ -98,6 +104,8 @@ namespace mm {
         renderFbo.begin();
         ofClear(0);
         ofSetColor(255);
+        
+        // mode-specific zones
         switch( currentMode ){
             case MODE_WELCOME:
                 break;
@@ -109,6 +117,11 @@ namespace mm {
                 break;
             case MODE_EDIT_DEL:
                 break;
+        }
+        
+        // toolbar
+        if ( currentMode >= MODE_ADD ){
+            toolBar.draw();
         }
         
         if ( shapes.size() > 0 ){
@@ -190,6 +203,13 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::mousePressed( ofMouseEventArgs & e ){
+        // toolbar stuff
+        if ( currentMode >= MODE_ADD ){
+            if( toolBar.mousePressed(e) ){
+                return;
+            }
+        }
+        
         switch (currentMode) {
             case MODE_WELCOME:
                 break;
@@ -233,6 +253,7 @@ namespace mm {
             case MODE_RENDER:
                 break;
         }
+        
     }
     
     //--------------------------------------------------------------
@@ -253,6 +274,10 @@ namespace mm {
                 
             case MODE_RENDER:
                 break;
+        }
+        // toolbar stuff
+        if ( currentMode >= MODE_ADD ){
+            toolBar.mouseDragged(e);
         }
     }
     
@@ -275,6 +300,11 @@ namespace mm {
             case MODE_RENDER:
                 break;
         }
+        
+        // toolbar stuff
+        if ( currentMode >= MODE_ADD ){
+            toolBar.mouseReleased(e);
+        }
     }
     
     //--------------------------------------------------------------
@@ -295,6 +325,11 @@ namespace mm {
                 
             case MODE_RENDER:
                 break;
+        }
+        
+        // toolbar stuff
+        if ( currentMode >= MODE_ADD ){
+            toolBar.mouseMoved(e);
         }
     }
     
@@ -324,6 +359,11 @@ namespace mm {
             newMode = MODE_RENDER;
         }
         setMode(newMode);
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::onChangeMode( Mode & m ){
+        setMode(m);
     }
     
     //--------------------------------------------------------------

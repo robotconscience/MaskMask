@@ -13,19 +13,37 @@
 
 namespace mm {
 
-    class ToolBar
+    class Tool : public ofRectangle {
+    public:
+        void load( string image_path );
+        void draw();
+        
+        Mode myMode;
+        
+    protected:
+        
+        ofImage toolImage;
+    };
+    
+    class ToolBar : public ofRectangle
     {
     public:
     
         void setup();
         void draw();
         
-        void mousePressed( ofMouseEventArgs & e );
+        bool mousePressed( ofMouseEventArgs & e );
         void mouseDragged( ofMouseEventArgs & e );
         void mouseReleased( ofMouseEventArgs & e );
         void mouseMoved( ofMouseEventArgs & e );
         void windowResized( ofResizeEventArgs & e );
-    
+        
+        vector<Tool> tools;
+        
+        ofEvent<Mode> onChangeTool;
+        
+    protected:
+        bool bDragging;
+        ofVec2f dragPoint;
     };
-
 }
