@@ -220,7 +220,7 @@ namespace mm {
                     bool bFound = false;
                     if ( shapes.size() > 0 ){
                         for ( auto & it : shapes ){
-                            if ( it.second.mousePressed(e) ){
+                            if ( it.second.mousePressed(e, currentMode) ){
                                 currentShape = &it.second;
                                 bFound = true;
                                 break;
@@ -234,18 +234,10 @@ namespace mm {
                 break;
                 
             case MODE_EDIT:
+            case MODE_EDIT_DEL:                
                 if ( shapes.size() > 0 ){
                     for ( auto & it : shapes ){
-                        if ( it.second.mousePressed(e) ) break;
-                    }
-                }
-                break;
-            
-                
-            case MODE_EDIT_DEL:
-                if ( shapes.size() > 0 ){
-                    for ( auto & it : shapes ){
-                        if ( it.second.mousePressed(e, true) ) break;
+                        if ( it.second.mousePressed(e, currentMode) ) break;
                     }
                 }
                 break;
@@ -315,10 +307,11 @@ namespace mm {
             case MODE_ADD:
                 break;
                 
+            case MODE_EDIT_DEL:
             case MODE_EDIT:
                 if ( shapes.size() > 0 ){
                     for ( auto & it : shapes ){
-                        it.second.mouseMoved(e);
+                        it.second.mouseMoved(e, currentMode);
                     }
                 }
                 break;

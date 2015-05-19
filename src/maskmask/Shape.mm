@@ -60,7 +60,7 @@ namespace mm {
         ofPushMatrix();
         path.draw();
         
-        if ( drawMode == MODE_ADD || drawMode == MODE_EDIT ){
+        if ( drawMode >= MODE_ADD ){
             if ( bShapeSelected ){
                 path.setFillColor(SHAPE_COLOR_SELECTED);
             } else {
@@ -82,6 +82,10 @@ namespace mm {
             ofPopStyle();
             if ( selected != NULL ){
                 ofRect(*selected, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
+            }
+            
+            if ( drawMode == MODE_EDIT ){
+                ofRect(pointToAdd, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
             }
         }
         
@@ -122,9 +126,9 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    bool Shape::mousePressed( ofMouseEventArgs & e, bool bDelete ){
+    bool Shape::mousePressed( ofMouseEventArgs & e, mm::Mode mode ){
         bool bFound = false;
-        if ( bDelete ){
+        if ( mode == MODE_EDIT_DEL ){
             for ( auto & v : points ){
                 if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
                     selected = &v;
@@ -169,7 +173,30 @@ namespace mm {
             }
             if ( !bFound ){
                 selected = NULL;
-                if ( path.getOutline().size() > 0 ){
+                // first, are we adding new point?
+                if ( mode == MODE_EDIT  ){
+                    if ( pointToAdd.distance(e) < SHAPE_SQUARE_SIZE ){
+                        Point p;
+                        p.set(pointToAdd);
+                        p.bezierA.set(pointToAdd);
+                        p.bezierB.set(pointToAdd);
+                        int index = nearestIndex;
+                        
+                        // hm
+                        auto & tp = points[nearestIndex];
+                        if ( tp.x - p.x < 0 ){//|| tp.y - p.y > 0 ){
+                            //nearestIndex--;
+                        }
+                        nearestIndex %= points.size();
+                        
+                        points.insert(points.begin() + nearestIndex, p);
+                        bChanged = true;
+                        bFound = true;
+                    }
+                }
+                
+                // nah? OK are we trying to drag?
+                if ( !bFound && path.getOutline().size() > 0 ){
                     if ( path.getOutline()[0].inside(e.x,e.y) ){
                         bShapeSelected = true;
                         pointPressed.set(e.x,e.y);
@@ -210,7 +237,7 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Shape::mouseMoved( ofMouseEventArgs & e ){
+    void Shape::mouseMoved( ofMouseEventArgs & e, Mode mode ){
         bool bFound = false;
         for ( auto & v : points ){
             if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
@@ -219,5 +246,8 @@ namespace mm {
             }
         }
         if ( !bFound ) selected = NULL;
+        if ( mode == MODE_EDIT &&  path.getOutline().size() > 0 ){
+            pointToAdd.set( path.getOutline()[0].getClosestPoint(e,&nearestIndex) );
+        }
     }
 }

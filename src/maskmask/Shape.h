@@ -29,10 +29,10 @@ namespace mm {
         void deleteSelected();
         void close();
         
-        bool mousePressed( ofMouseEventArgs & e, bool bDelete = false );
+        bool mousePressed( ofMouseEventArgs & e, mm::Mode mode = MODE_RENDER );
         void mouseDragged( ofMouseEventArgs & e );
         void mouseReleased( ofMouseEventArgs & e );
-        void mouseMoved( ofMouseEventArgs & e );
+        void mouseMoved( ofMouseEventArgs & e, mm::Mode mode = MODE_RENDER );
         
         bool shouldDelete();
         
@@ -42,6 +42,9 @@ namespace mm {
         bool bMouseDown, bShapeSelected;
         
         vector<Point> points;
+        
+        ofVec2f pointToAdd;
+        unsigned int nearestIndex;
         
         ofPath path;
         bool bChanged, bKillMe;
