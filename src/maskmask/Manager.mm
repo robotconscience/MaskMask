@@ -7,7 +7,6 @@
 //
 
 #include "Manager.h"
-#include "ofxCocoa.h"
 
 namespace mm {
     
@@ -18,6 +17,7 @@ namespace mm {
         currentMode = MODE_ADD; // todo: should be tied to a "first time" setting
         bNeedToResize = false;
         bAddCursor = false;
+        currentShape = nullptr;
     }
     
     //--------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace mm {
         ofRemoveListener(statusMenu.onReload, this, &Manager::onReload);
         ofRemoveListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
-        ofRemoveListener(toolBar.onChangeTool, this, &Manager::onChangeMode);
+//        ofRemoveListener(//toolBar.onChangeTool, this, &Manager::onChangeMode);
         
         ofRemoveListener(ofEvents().update, this, &Manager::update);
         ofRemoveListener(ofEvents().draw, this, &Manager::draw);
@@ -47,8 +47,8 @@ namespace mm {
         ofAddListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
         // build tool bar
-        toolBar.setup();
-        ofAddListener(toolBar.onChangeTool, this, &Manager::onChangeMode);
+//        //toolBar.setup();
+//        ofAddListener(//toolBar.onChangeTool, this, &Manager::onChangeMode);
         
         // build cursor images
         @autoreleasepool {
@@ -92,14 +92,12 @@ namespace mm {
         }
         
         // clean up shapes
-        mux.lock();
         for ( auto & it : shapes ){
-            if (it.second.shouldDelete() ){
+            if (it.second->shouldDelete() ){
                 shapes.erase(it.first);
                 break;
             }
         }
-        mux.unlock();
     }
     
     //--------------------------------------------------------------
@@ -124,12 +122,12 @@ namespace mm {
         
         // toolbar
         if ( currentMode >= MODE_ADD ){
-            toolBar.draw();
+//            //toolBar.draw();
         }
         
         if ( shapes.size() > 0 ){
             for ( auto & it : shapes ){
-                it.second.draw( currentMode );
+                it.second->draw( currentMode );
             }
         }
         renderFbo.end();
@@ -138,7 +136,7 @@ namespace mm {
         renderShader.begin();
         renderShader.setUniform1i("mode", (int) currentMode );
         renderShader.setUniform4f("ko_color", SHAPE_COLOR.r/255.f,SHAPE_COLOR.g/255.f,SHAPE_COLOR.b/255.f,SHAPE_COLOR.a/255.f );
-        renderShader.setUniformTexture("tex0", renderFbo.getTextureReference(0), 0);
+        renderShader.setUniformTexture("tex0", renderFbo.getTexture(0), 0);
         renderFbo.draw(0,0);
         renderShader.end();
     }
@@ -154,7 +152,7 @@ namespace mm {
         while (shapes.size() != 0 && shapes.count(nid) != 0 ){
             nid++;
         }
-        shapes[nid] = Shape();
+        shapes[nid] = new Shape();
         
         return nid;
     }
@@ -175,6 +173,7 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::keyPressed( ofKeyEventArgs & e ){
+        
         // major key combos
         if ( e.key == OF_KEY_TAB ){
             onMode();
@@ -182,6 +181,10 @@ namespace mm {
         } if ( ofGetKeyPressed( OF_KEY_SUPER )){
             if ( e.key == 's' ){
                 onSave();
+            } else if ( e.key == 'z' ){
+                if (currentShape != nullptr && currentMode >= MODE_ADD ){
+                    currentShape->removeLastVertex();
+                }
             }
         }
         
@@ -194,7 +197,7 @@ namespace mm {
                 if ( e.key == OF_KEY_DEL || e.key == OF_KEY_BACKSPACE ){
                     if ( shapes.size() > 0 ){
                         for ( auto & it : shapes ){
-                            it.second.deleteSelected();
+                            it.second->deleteSelected();
                         }
                     }
                 }
@@ -217,32 +220,38 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::mousePressed( ofMouseEventArgs & e ){
+        
         // toolbar stuff
         if ( currentMode >= MODE_ADD ){
-            if( toolBar.mousePressed(e) ){
-                return;
-            }
+//            if( //toolBar.mousePressed(e) ){
+//                return;
+//            }
         }
         
         switch (currentMode) {
             case MODE_WELCOME:
                 break;
             case MODE_ADD:
-                if ( currentShape != NULL ){
-                    currentShape->addVertex(e);
+                if ( currentShape != nullptr ){
+                    unique_lock<mutex> lock(mux);
+                    
+                    if ( currentShape != nullptr ){
+                        currentShape->addVertex(e);
+                    }
                 } else {
                     bool bFound = false;
                     if ( shapes.size() > 0 ){
                         for ( auto & it : shapes ){
-                            if ( it.second.mousePressed(e, currentMode) ){
-                                currentShape = &it.second;
+                            if ( it.second->mousePressed(e, currentMode) ){
+                                currentShape = it.second;
                                 bFound = true;
                                 break;
                             }
                         }
                     }
                     if ( !bFound ){
-                        currentShape = &shapes[createShape()];
+                        
+                        currentShape = shapes[createShape()];
                     }
                 }
                 break;
@@ -251,7 +260,7 @@ namespace mm {
             case MODE_EDIT_DEL:                
                 if ( shapes.size() > 0 ){
                     for ( auto & it : shapes ){
-                        if ( it.second.mousePressed(e, currentMode) ) break;
+                        if ( it.second->mousePressed(e, currentMode) ) break;
                     }
                 }
                 break;
@@ -259,7 +268,6 @@ namespace mm {
             case MODE_RENDER:
                 break;
         }
-        
     }
     
     //--------------------------------------------------------------
@@ -268,12 +276,17 @@ namespace mm {
             case MODE_WELCOME:
                 break;
             case MODE_ADD:
+                if ( shapes.size() > 0 ){
+                    for ( auto & it : shapes ){
+                        it.second->mouseDragged(e, currentMode);
+                    }
+                }
                 break;
                 
             case MODE_EDIT:
                 if ( shapes.size() > 0 ){
                     for ( auto & it : shapes ){
-                        it.second.mouseDragged(e);
+                        it.second->mouseDragged(e);
                     }
                 }
                 break;
@@ -283,7 +296,7 @@ namespace mm {
         }
         // toolbar stuff
         if ( currentMode >= MODE_ADD ){
-            toolBar.mouseDragged(e);
+            //toolBar.mouseDragged(e);
         }
     }
     
@@ -298,7 +311,7 @@ namespace mm {
             case MODE_EDIT:
                 if ( shapes.size() > 0 ){
                     for ( auto & it : shapes ){
-                        it.second.mouseReleased(e);
+                        it.second->mouseReleased(e);
                     }
                 }
                 break;
@@ -309,7 +322,7 @@ namespace mm {
         
         // toolbar stuff
         if ( currentMode >= MODE_ADD ){
-            toolBar.mouseReleased(e);
+            //toolBar.mouseReleased(e);
         }
     }
     
@@ -319,13 +332,16 @@ namespace mm {
             case MODE_WELCOME:
                 break;
             case MODE_ADD:
+                if ( currentShape != nullptr ){
+                    currentShape->setNextPoint(e);
+                }
                 break;
                 
             case MODE_EDIT_DEL:
             case MODE_EDIT:
                 if ( shapes.size() > 0 ){
                     for ( auto & it : shapes ){
-                        it.second.mouseMoved(e, currentMode);
+                        it.second->mouseMoved(e, currentMode);
                     }
                 }
                 break;
@@ -336,7 +352,7 @@ namespace mm {
         
         // toolbar stuff
         if ( currentMode >= MODE_ADD ){
-            toolBar.mouseMoved(e);
+            //toolBar.mouseMoved(e);
         }
     }
     
@@ -361,7 +377,7 @@ namespace mm {
             xmlOut.addChild("shape");
             xmlOut.setToChild(child);
             int index = 0;
-            for ( auto & p : s.second.getPoints()){
+            for ( auto & p : s.second->getPoints()){
                 xmlOut.addChild("point");
                 xmlOut.setToChild(index);
                 xmlOut.addValue("x", p.x);
@@ -407,20 +423,20 @@ namespace mm {
                     
                     float x = xml.getValue("x", 0.f);
                     float y = xml.getValue("y", 0.f);
-                    s.second.addVertex(ofVec2f(x,y));
+                    s.second->addVertex(ofVec2f(x,y));
                     
                     x = xml.getValue("b1x", 0.);
                     y = xml.getValue("b1y", 0.);
-                    s.second.getPoints()[i].bezierA.set(x,y);
+                    s.second->getPoints()[i].bezierA.set(x,y);
                     x = xml.getValue("b2x", 0.);
                     y = xml.getValue("b2y", 0.);
-                    s.second.getPoints()[i].bezierB.set(x,y);
-                    s.second.getPoints()[i].bUseBezier = xml.getValue("isBezier", false);
+                    s.second->getPoints()[i].bezierB.set(x,y);
+                    s.second->getPoints()[i].bUseBezier = xml.getValue("isBezier", false);
                     xml.setToParent();
                 }
                 
                 xml.setToParent();
-                currentShape = &s.second;
+                currentShape = s.second;
             }
             xml.setToParent();
         }
@@ -431,6 +447,25 @@ namespace mm {
         Mode newMode = (Mode)(currentMode + 1);
         if ( newMode > MODE_EDIT ){
             newMode = MODE_RENDER;
+            rc::setWindowLevel(NSScreenSaverWindowLevel);
+            rc::cocoaWindow()->setWindowPosition(0,0);
+            
+            for ( auto & s : shapes ){
+                auto & p = s.second->getPoints();
+                for (auto & v : p ){
+                    v.y += 50;
+                }
+            }
+        } else if ( newMode == MODE_ADD ){
+            rc::setWindowLevel(NSMainMenuWindowLevel);
+            rc::cocoaWindow()->setWindowPosition(0,50);
+            
+            for ( auto & s : shapes ){
+                auto & p = s.second->getPoints();
+                for (auto & v : p ){
+                    v.y -= 50;
+                }
+            }
         }
         setMode(newMode);
     }
@@ -446,31 +481,35 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::setMode( Mode newMode ){
+    
         currentMode = newMode;
         
         switch (newMode) {
             case MODE_WELCOME:
                 break;
             case MODE_EDIT:
-                if ( currentShape != NULL ){
+                if ( currentShape != nullptr ){
                     currentShape->close();
-                    currentShape = NULL;
+                    currentShape = nullptr;
                 }
-                [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:NO];
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorEditA];
+                
+                
+                
+                [rc::glWindow() setIgnoresMouseEvents:NO];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
                 [cursorEditA set];
                 break;
             case MODE_ADD:
-                [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:NO];
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorAdd];
+                [rc::glWindow() setIgnoresMouseEvents:NO];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
                 [cursorAdd set];
                 break;
                 
             case MODE_RENDER:
-                currentShape = NULL;
-                [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:YES];
+                currentShape = nullptr;
+                [rc::glWindow() setIgnoresMouseEvents:YES];
                 
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorStandard];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
                 break;
         }
@@ -478,26 +517,26 @@ namespace mm {
         // set cursor
         switch (currentMode) {
             case MODE_WELCOME:
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorStandard];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
                 break;
             case MODE_EDIT:
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorEditA];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
                 [cursorEditA set];
                 break;
                 
             case MODE_EDIT_DEL:
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorEditD];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorEditD];
                 [cursorEditD set];
                 break;
                 
             case MODE_ADD:
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorAdd];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
                 [cursorAdd set];
                 break;
                 
             case MODE_RENDER:
-                [MSA::ofxCocoa::glView() addCursorRect:MSA::ofxCocoa::rectForAllScreens() cursor:cursorStandard];
+                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
                 break;
         }

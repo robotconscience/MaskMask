@@ -7,7 +7,7 @@
 //
 
 #import "StatusbarDelegate.h"
-#include "ofxCocoa.h"
+#include "ofxCocoaWindow.h"
 
 @interface StatusbarDelegate ()
 
@@ -55,6 +55,10 @@
     
     self.statusBar = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     NSImage * barImage = [NSImage imageNamed:@"icon_task_white.png"];
+    
+    //TODO
+    NSString *osxMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"];
+    
     self.statusBar.image = barImage;
     
     self.StatusMenu = [NSMenu new];

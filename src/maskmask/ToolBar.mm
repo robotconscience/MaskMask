@@ -15,7 +15,7 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Tool::load( string image_path ){
-        toolImage.loadImage( ofToDataPath(image_path) );
+        toolImage.load( ofToDataPath(image_path) );
     }
     
     //--------------------------------------------------------------
@@ -54,12 +54,13 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void ToolBar::draw(){
+    void ToolBar::draw( ofEventArgs & e ){
+        cout << "DRAW"<<endl;
         ofPushMatrix();
         ofTranslate(this->x, this->y);
         ofPushStyle();
         ofSetColor(TOOLBAR_BG_COLOR);
-        ofRect(0,0,this->width,this->height);
+        ofDrawRectangle(0,0,this->width,this->height);
         
         ofSetColor( ofColor::white );
         FontManager::get().fontBold.drawString("Shape Tools", TOOLBAR_PADDING,TOOLBAR_PADDING+TOOLBAR_FONT_SIZE);

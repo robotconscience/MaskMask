@@ -1,11 +1,14 @@
 #include "ofApp.h"
-#include "ofxCocoa.h"
+#include "ofxCocoaWindow.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(ofColor(0,0));
     
-    [MSA::ofxCocoa::glWindow() setIgnoresMouseEvents:YES];
+    auto * window = static_cast<ofxCocoaWindow *>(ofGetWindowPtr());
+    
+    [window->getNSWindow() setIgnoresMouseEvents:YES];
+    [window->getNSWindow() makeKeyAndOrderFront:nil];
     
     ofSetDataPathRoot("../Resources/");
     
@@ -23,7 +26,6 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
 }
 
 //--------------------------------------------------------------

@@ -13,6 +13,7 @@
 #include "Shape.h"
 #include "ToolBar.h"
 #include "StatusbarDelegate.h"
+#include "ofxCocoaUtils.h"
 
 namespace mm {
     
@@ -54,17 +55,18 @@ namespace mm {
         Mode        currentMode;
         
         // shapes
-        std::map<int, Shape> shapes;
+        std::map<int, Shape *> shapes;
         Shape * currentShape;
         
         // toolz
-        ToolBar toolBar;
+//        ToolBar toolBar;
         
         // switches
         bool bNeedToResize; // set when window resizes
         bool bAddCursor;    // in edit mode, show 'add' or 'subtract'
         
-        // important stuff
-        ofMutex mux;
+        // workaround: queues to fix funky threading with mouse
+        vector<ofVec2f> pointQueue;
+        mutex mux;
     };
 }

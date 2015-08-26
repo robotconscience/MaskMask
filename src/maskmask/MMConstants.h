@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <Cocoa/Cocoa.h>
+
 namespace mm {
     static const int SHAPE_SQUARE_SIZE = 10;
     static const int SHAPE_SQUARE_SIZE_SELECTED = 12;
@@ -68,11 +70,11 @@ namespace mm {
         static FontManager & get(){
             static FontManager me;
             if ( !me.fontBold.isLoaded()){
-                me.fontBold.loadFont( ofToDataPath(TOOLBAR_FONT_BOLD), TOOLBAR_FONT_SIZE );
+                me.fontBold.load( ofToDataPath(TOOLBAR_FONT_BOLD), TOOLBAR_FONT_SIZE );
             }
             
             if ( !me.font.isLoaded()){
-                me.font.loadFont( ofToDataPath(TOOLBAR_FONT), TOOLBAR_FONT_SIZE );
+                me.font.load( ofToDataPath(TOOLBAR_FONT), TOOLBAR_FONT_SIZE );
             }
             return me;
         }

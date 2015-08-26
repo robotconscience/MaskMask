@@ -16,7 +16,7 @@ namespace mm {
     class Tool : public ofRectangle {
     public:
         void load( string image_path );
-        void draw();
+        void draw( );
         
         Mode myMode;
         
@@ -30,7 +30,7 @@ namespace mm {
     public:
     
         void setup();
-        void draw();
+        void draw( ofEventArgs & e );
         
         bool mousePressed( ofMouseEventArgs & e );
         void mouseDragged( ofMouseEventArgs & e );

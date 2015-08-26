@@ -1,4 +1,4 @@
-//
+            //
 //  Shape.cpp
 //  MaskMask
 //
@@ -21,6 +21,9 @@ namespace mm {
         bShapeSelected = false;
         bChanged = false;
         bKillMe = false;
+        
+        selected = nullptr;
+//        selectedComp = nullptr;
     }
     
     //--------------------------------------------------------------
@@ -29,31 +32,71 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Shape::draw( mm::Mode drawMode ){
+        static mm::Mode lastMode = MODE_WELCOME;
+        if ( drawMode != lastMode ){
+            bChanged = true;
+            lastMode = drawMode;
+        }
         if ( bChanged ){
             path.clear();
             path.setMode(ofPath::POLYLINES);
             
+            debugLines.clear();
+            
             int ind = 0;
-            for ( auto & p : points ){
-                if ( ind == 0 ){
-                    path.lineTo(p);
+
+            for ( size_t i=0; i<points.size(); i++){
+                auto & p = points[i];
+                Point * prev = nullptr;
+                Point * next = nullptr;
+                
+                if ( i != 0 ){
+                    prev = &points[i-1];
+                } else if ( points.size() > 1 ){
+                    prev = &points[ points.size() - 1 ];
+                }
+                if ( i +1 < points.size() ){
+                    next = &points[i+1];
+                } else if ( points.size() > 1 ){
+                    next = &points[0];
+                }
+                
+                if ( i == 0 ){
+                    path.moveTo(p);
                 } else {
-                    if ( p.bUseBezier ){
-                        path.bezierTo(p.bezierA, p.bezierB, p);
+                    if ( p.bUseBezier && prev != nullptr ){// n != nullptr && n->bUseBezier ){
+                        path.quadBezierTo(*prev, p.bezierB, p);
+                        
+                        debugLines.push_back(ofPath());
+                        debugLines.back().lineTo(p.bezierA);
+                        debugLines.back().lineTo(p);
+                        debugLines.back().lineTo(p.bezierB);
+                    } else if ( prev != nullptr && prev->bUseBezier ){
+                        path.quadBezierTo(*prev, prev->bezierA, p);
+                        
                     } else {
                         path.lineTo(p);
                     }
                 }
-                ind++;
             }
+            
+            // draw "next" preview
+            if ( nextPoint != ofVec2f(-1,-1) && drawMode == MODE_ADD ){
+                path.lineTo(nextPoint);
+            }
+            
+            // close path
             if ( points.size() != 0 ){
                 auto & p = points[0];
+                auto & e = points[points.size()-1];
                 if ( p.bUseBezier ){
-                    path.bezierTo(p.bezierA, p.bezierB, p);
+                    path.quadBezierTo(e, p.bezierA, p);
+                } else if ( e.bUseBezier ){
+                    path.quadBezierTo(e, e.bezierA, p);
                 } else {
                     //                    path.lineTo(p);
                 }
-                path.close();
+//                path.close();
             }
             bChanged  = false;
         }
@@ -71,21 +114,29 @@ namespace mm {
             bool bFlip = true;
             for (auto & v : points ){
                 ofSetColor(bFlip ? SHAPE_SQUARE_COLOR_A : SHAPE_SQUARE_COLOR_B );
-                ofRect(v, SHAPE_SQUARE_SIZE, SHAPE_SQUARE_SIZE);
+                ofDrawRectangle(v, SHAPE_SQUARE_SIZE, SHAPE_SQUARE_SIZE);
                 if ( v.bUseBezier ){
                     ofSetColor(bFlip ? SHAPE_BEZIER_COLOR_A : SHAPE_BEZIER_COLOR_B);
-                    ofRect(v.bezierA, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
-                    ofRect(v.bezierB, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
+                    ofDrawRectangle(v.bezierA, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
+                    ofDrawRectangle(v.bezierB, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
                 }
                 bFlip = !bFlip;
             }
+            
+            for (auto & path : debugLines ){
+                path.setFilled(false);
+                path.setStrokeWidth(1.);
+                path.setStrokeColor(ofColor::white);
+                path.draw();
+            }
+            
             ofPopStyle();
             if ( selected != NULL ){
-                ofRect(*selected, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
+                ofDrawRectangle(*selected, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
             }
             
             if ( drawMode == MODE_EDIT ){
-                ofRect(pointToAdd, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
+                ofDrawRectangle(pointToAdd, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
             }
         }
         
@@ -93,11 +144,26 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Shape::addVertex(ofVec2f p ){
+    void Shape::addVertex( const ofVec2f & p ){
         points.push_back(Point());
         points.back().set(p);
         points.back().bezierA.set(p);
         points.back().bezierB.set(p);
+        bChanged = true;
+        
+        nextPoint.set(-1,-1);
+    }
+    
+    //--------------------------------------------------------------
+    void Shape::removeLastVertex(){
+        if ( points.size() != 0 ){
+            points.pop_back();
+        }
+    }
+    
+    //--------------------------------------------------------------
+    void Shape::setNextPoint( const ofVec2f & p){
+        nextPoint.set(p);
         bChanged = true;
     }
     
@@ -116,7 +182,8 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    vector<Point> & Shape::getPoints(){
+    std::vector<Point> & Shape::getPoints(){
+//        unique_lock<mutex> lock(mux);
         return points;
     }
     
@@ -137,6 +204,7 @@ namespace mm {
             for ( auto & v : points ){
                 if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
                     selected = &v;
+                    selected->mode = EDIT_POINT;
                     bFound = true;
                     break;
                 }
@@ -163,21 +231,28 @@ namespace mm {
             for ( auto & v : points ){
                 if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
                     selected = &v;
+                    selected->mode = EDIT_POINT;
+                    
                     if ( ofGetKeyPressed( MM_KEY_BEZIER )){
                         v.bUseBezier = !v.bUseBezier;
+                        selected = &v;
+                        selected->mode = EDIT_BEZIER;
                         bChanged = true;
                     }
                     bFound = true;
                 } else if ( v.bezierA.distance(e) < SHAPE_SQUARE_SIZE ){
-                    selected = &v.bezierA;
+                    selected = &v;
+                    selected->mode = EDIT_BEZIER_A;
                     bFound = true;
                 } else if ( v.bezierB.distance(e) < SHAPE_SQUARE_SIZE ){
-                    selected = &v.bezierB;
+                    selected = &v;
                     bFound = true;
+                    selected->mode = EDIT_BEZIER_B;
                 }
             }
             if ( !bFound ){
-                selected = NULL;
+                selected = nullptr;
+//                selectedComp =  nullptr;
                 // first, are we adding new point?
                 if ( mode == MODE_EDIT  ){
                     if ( pointToAdd.distance(e) < SHAPE_SQUARE_SIZE ){
@@ -185,13 +260,20 @@ namespace mm {
                         p.set(pointToAdd);
                         p.bezierA.set(pointToAdd);
                         p.bezierB.set(pointToAdd);
+                        
+                        nearestIndex = getClosestIndex( pointToAdd );
+                        
                         int index = nearestIndex;
                         
                         // hm
                         auto & tp = points[nearestIndex];
-                        if ( tp.x - p.x < 0 ){//|| tp.y - p.y > 0 ){
-                            //nearestIndex--;
+                        
+                        // point should be 'in front' of tp
+                        if ( tp.x - p.x > 0){
+                            nearestIndex++;
                         }
+                        
+                        
                         nearestIndex %= points.size();
                         
                         points.insert(points.begin() + nearestIndex, p);
@@ -219,9 +301,10 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Shape::mouseDragged( ofMouseEventArgs & e ){
+    void Shape::mouseDragged( ofMouseEventArgs & e, mm::Mode mode ){
         if ( selected != NULL && bMouseDown ){
             selected->set(e);
+            
             bChanged = true;
         } else if ( bShapeSelected ){
             for ( auto & p : points ){
@@ -231,11 +314,28 @@ namespace mm {
             }
             bChanged = true;
             pointPressed.set(e.x,e.y);
+        } else {
+            // hm, kind of a hack to decide if we just added
+            // a point or not!
+            
+            auto & v = points.back();
+            if ( mode == MODE_ADD && points.size() != 0 ){
+                if ( !v.bUseBezier ){
+                    v.bUseBezier = !v.bUseBezier;
+                    selected = &v;
+                    selected->mode = EDIT_BEZIER;
+                } else {
+                    if ( selected != NULL){
+                        selected->set(e);
+                    }
+                }
+                bChanged = true;
+            }
         }
     }
     
     //--------------------------------------------------------------
-    void Shape::mouseReleased( ofMouseEventArgs & e ){
+    void Shape::mouseReleased( ofMouseEventArgs & e, mm::Mode mode ){
         selected = NULL;
         bMouseDown = false;
         bShapeSelected = false;
@@ -252,7 +352,25 @@ namespace mm {
         }
         if ( !bFound ) selected = NULL;
         if ( mode == MODE_EDIT &&  path.getOutline().size() > 0 ){
-            pointToAdd.set( path.getOutline()[0].getClosestPoint(e,&nearestIndex) );
+            pointToAdd.set( path.getOutline()[0].getClosestPoint(e) );
+            nearestIndex = getClosestIndex( pointToAdd );
         }
+    }
+    
+    //--------------------------------------------------------------
+    int Shape::getClosestIndex( const ofVec3f & p ){
+        float dist = FLT_MAX;
+        int closest = -1;
+        
+        int index = 0;
+        for ( auto & v : points ){
+            float nd = v.distance(p);
+            if ( nd < dist ){
+                closest = index;
+                dist = nd;
+            }
+            index++;
+        }
+        return closest;
     }
 }
