@@ -19,6 +19,11 @@
 {
     manager->update();
     
+    // this is a hack to make the color panel float on top!
+    
+    if([NSColorPanel sharedColorPanelExists] && [[NSColorPanel sharedColorPanel] isVisible]){
+        [[NSColorPanel sharedColorPanel] setLevel:NSMainMenuWindowLevel + 2];
+    }
 }
 
 //--------------------------------------------------------------
@@ -60,7 +65,6 @@
 //--------------------------------------------------------------
 - (void)mousePressed:(NSPoint)p button:(int)button
 {
-	
 }
 
 //--------------------------------------------------------------
@@ -73,6 +77,25 @@
 - (void)windowResized:(NSSize)size
 {
 	
+}
+
+//--------------------------------------------------------------
+- (void) changeMode:(int) whichMode
+{
+    manager->setMode( (mm::Mode) whichMode);
+}
+
+
+//--------------------------------------------------------------
+- (void) newColor:(NSColor *) color
+{
+    ofFloatColor newColor;
+    newColor.set( color.redComponent, color.greenComponent, color.blueComponent);
+    
+    ofColor colorOut;
+    colorOut.set(newColor.r * 255., newColor.g * 255., newColor.b * 255);
+    
+    manager->setDebugColor(colorOut);
 }
 
 @end

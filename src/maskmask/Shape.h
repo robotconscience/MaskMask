@@ -96,6 +96,8 @@ namespace mm {
         int getClosestIndex( const ofVec2f & p );
         bool inside( const ofVec2f & p, mm::Mode drawMode );
         
+        void setFillColor( ofColor fill );
+        
     protected:
         Point * selected;
 //        ofVec2f * selectedComp;
@@ -111,6 +113,8 @@ namespace mm {
         
         ofPath path;
         bool bChanged, bKillMe;
+        
+        ofColor fillColor, selectedColor;
         
     };
 }

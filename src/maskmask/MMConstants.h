@@ -20,7 +20,7 @@ namespace mm {
     static const ofColor SHAPE_BEZIER_COLOR_A(255,0,255);
     static const ofColor SHAPE_BEZIER_COLOR_B(0,255,255);
     
-    static const ofColor SHAPE_COLOR(255,0,0);
+    static ofColor SHAPE_COLOR(255,0,0);
     static const ofColor SHAPE_COLOR_SELECTED(255,255,0,150);
     
     static const char MM_KEY_BEZIER = 'z';

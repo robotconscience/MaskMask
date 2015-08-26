@@ -37,6 +37,9 @@ namespace mm {
         void update();
         void draw();
         
+        // aesthetic tweakers
+        void setDebugColor( ofColor & c );
+        
     protected:
         void keyPressed( ofKeyEventArgs & e );
         void mousePressed( ofMouseEventArgs & e );
@@ -60,6 +63,7 @@ namespace mm {
         
         // aesthetix
         float       maxAlpha;
+        ofColor     debugColor;
         
         // shapes
         std::map<int, Shape *> shapes;

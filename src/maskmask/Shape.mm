@@ -24,6 +24,8 @@ namespace mm {
         
         selected = nullptr;
 //        selectedComp = nullptr;
+        fillColor.set(SHAPE_COLOR);
+        selectedColor.set(SHAPE_COLOR_SELECTED);
     }
     
     //--------------------------------------------------------------
@@ -107,7 +109,7 @@ namespace mm {
             if ( bShapeSelected ){
                 path.setFillColor(SHAPE_COLOR_SELECTED);
             } else {
-                path.setFillColor(SHAPE_COLOR);
+                path.setFillColor(fillColor);
             }
             
             ofPushStyle();
@@ -357,6 +359,12 @@ namespace mm {
         }
     }
     
+    
+    //--------------------------------------------------------------
+    void Shape::setFillColor( ofColor fill ){
+        fillColor.set(fill);
+    }
+    
     //--------------------------------------------------------------
     int Shape::getClosestIndex( const ofVec2f & p ){
         float dist = FLT_MAX;
@@ -373,8 +381,6 @@ namespace mm {
         }
         return closest;
     }
-    
-    
     
     //--------------------------------------------------------------
     bool Shape::inside( const ofVec2f & p, mm::Mode drawMode ){

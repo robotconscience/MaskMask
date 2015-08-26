@@ -6,6 +6,7 @@
 {
     NSWindow * cocoaWindow = [self window];
     [cocoaWindow setLevel:NSMainMenuWindowLevel + 1];
+    [self setTranslucent:YES];
 }
 
 - (void)update
@@ -14,14 +15,7 @@
 
 - (void)draw
 {
-	ofBackground(0, 255, 0);
-	
-	ofNoFill();
-	ofSetColor(255);
-	ofCircle(self.mouseX, self.mouseY, 100);
-	
-	string str = "View2: " + ofToString(self.mouseX) +  " " + ofToString(self.mouseY);
-	ofDrawBitmapString(str, 10, 20);
+    ofBackground(ofColor(0,0));
 }
 
 - (void)exit
@@ -62,6 +56,12 @@
 - (void)windowResized:(NSSize)size
 {
 	
+}
+
+
+- (void) changeMode:(int) whichMode
+{
+//    mainWindow->manager->setMode(whichMode);
 }
 
 @end

@@ -20,6 +20,7 @@ namespace mm {
         currentShape = nullptr;
         externalMouseEventsActive = false;
         maxAlpha = 0.;
+        debugColor.set(SHAPE_COLOR);
     }
     
     //--------------------------------------------------------------
@@ -152,7 +153,7 @@ namespace mm {
         renderShader.begin();
         renderShader.setUniform1f("maxAlpha", maxAlpha);
         renderShader.setUniform1i("mode", (int) currentMode );
-        renderShader.setUniform4f("ko_color", SHAPE_COLOR.r/255.f,SHAPE_COLOR.g/255.f,SHAPE_COLOR.b/255.f,SHAPE_COLOR.a/255.f );
+        renderShader.setUniform4f("ko_color", debugColor.r/255.f,debugColor.g/255.f,debugColor.b/255.f,debugColor.a/255.f );
         renderShader.setUniformTexture("tex0", renderFbo.getTexture(0), 0);
         renderFbo.draw(0,0);
         renderShader.end();
@@ -162,6 +163,17 @@ namespace mm {
     // shape methods
     //--------------------------------------------------------------
     
+    
+    void Manager::setDebugColor( ofColor & c ){
+        debugColor.set(c);
+        
+        for ( auto & it : shapes ){
+            it.second->setFillColor(debugColor);
+        }
+        
+        cout << debugColor << endl;
+    }
+    
     //--------------------------------------------------------------
     int Manager::createShape(){
         int nid = shapes.size();
@@ -170,6 +182,7 @@ namespace mm {
             nid++;
         }
         shapes[nid] = new Shape();
+        shapes[nid]->setFillColor(debugColor);
         
         return nid;
     }

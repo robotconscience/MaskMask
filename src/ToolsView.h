@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCocoaGLView.h"
+#include "MainView.h"
 
 @interface ToolsView : ofxCocoaGLView {
 }
