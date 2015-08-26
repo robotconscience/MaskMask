@@ -10,29 +10,12 @@
 
 namespace rc {
     
-    ofxCocoaWindow * cocoaWindow(){
-        static ofxCocoaWindow * windowInstance = NULL;
-        if ( windowInstance == NULL){
-            windowInstance = static_cast<ofxCocoaWindow *>(ofGetWindowPtr());
-        }
-        return windowInstance;
-    }
-    
-    GLView * glView(){
-        return cocoaWindow()->getGlView();
-        
-    }
-    
-    NSWindow * glWindow(){
-        return cocoaWindow()->getNSWindow();
-    }
-    
     NSScreen *screen(int screenIndex) {
         return [[NSScreen screens] objectAtIndex:screenIndex];
     }
     
-    NSScreen *currentScreen() {
-        return [glWindow() screen];
+    NSScreen *currentScreen( NSWindow * window ) {
+        return [window screen];
     }
     
     NSScreen *mainScreen() {
@@ -44,8 +27,8 @@ namespace rc {
         return [screen(screenIndex) frame];
     }
     
-    NSRect rectForCurrentScreen() {
-        return [currentScreen() frame];
+    NSRect rectForCurrentScreen( NSWindow * window) {
+        return [currentScreen(window) frame];
     }
     
     NSRect rectForMainScreen() {
@@ -58,8 +41,11 @@ namespace rc {
         return rect;
     }
     
-    
-    void setWindowLevel( NSInteger newLevel ){
-        [glWindow() setLevel:newLevel];
+    void setWindowPosition( NSWindow * window, NSView * view, const ofPoint & p ){
+        NSRect viewFrame  = [ view frame ];
+        NSRect screenRect = [ [window screen ] frame ];
+        
+        NSPoint position = NSMakePoint( p.x, screenRect.size.height - viewFrame.size.height - p.y );
+        [window setFrameOrigin: position ];
     }
 }

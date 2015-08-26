@@ -25,9 +25,13 @@ namespace mm {
     
     static const char MM_KEY_BEZIER = 'z';
     
+    static const float MM_RENDER_ALPHA = 1.;
+    static const float MM_RENDER_PREVIEW_ALPHA = .75;
+    
     // App Mode
     enum Mode {
         MODE_WELCOME = 0,
+        MODE_RENDER_PREVIEW,
         MODE_RENDER,
         MODE_ADD,
         MODE_EDIT_DEL,

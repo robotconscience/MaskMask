@@ -358,7 +358,7 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    int Shape::getClosestIndex( const ofVec3f & p ){
+    int Shape::getClosestIndex( const ofVec2f & p ){
         float dist = FLT_MAX;
         int closest = -1;
         
@@ -372,5 +372,22 @@ namespace mm {
             index++;
         }
         return closest;
+    }
+    
+    
+    
+    //--------------------------------------------------------------
+    bool Shape::inside( const ofVec2f & p, mm::Mode drawMode ){
+        static vector<ofPoint> tempPoints;
+        tempPoints.clear();
+        for ( auto & p : points ){
+            tempPoints.push_back(ofVec2f(p));
+        }
+        
+//        bool insideShape = ofInsidePoly(p, tempPoints);
+        
+        bool insideShape = path.getOutline()[0].inside(p);
+        
+        return drawMode == MODE_RENDER ? !insideShape : insideShape;
     }
 }

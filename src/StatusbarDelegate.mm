@@ -7,7 +7,6 @@
 //
 
 #import "StatusbarDelegate.h"
-#include "ofxCocoaWindow.h"
 
 @interface StatusbarDelegate ()
 

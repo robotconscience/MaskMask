@@ -20,18 +20,18 @@ namespace mm {
         EDIT_BEZIER_B
     };
     
-    class Point : public ofVec3f {
+    class Point : public ofVec2f {
     public:
         Point(){ bUseBezier = false; mode = EDIT_POINT; };
-        ofVec3f bezierA, bezierB;
+        ofVec2f bezierA, bezierB;
         bool bUseBezier;
         
-        void set(const ofVec3f & next ){
+        void set(const ofVec2f & next ){
             switch ( mode ){
                 case EDIT_BEZIER: {
                     
                     bezierA.set(next);
-                    ofVec3f dist = *this + (*this - next);
+                    ofVec2f dist = *this + (*this - next);
                     
                     bezierB.set(dist);
                 }
@@ -48,8 +48,8 @@ namespace mm {
                     break;
                     
                 case EDIT_POINT:{
-                    ofVec3f diff = (*this-next);
-                    ofVec3f::set(next);
+                    ofVec2f diff = (*this-next);
+                    ofVec2f::set(next);
                     if ( bUseBezier ){
                         bezierA -= diff;
                         bezierB -= diff;
@@ -57,14 +57,14 @@ namespace mm {
                 }
                 break;
                 default:
-                    ofVec3f::set(next);
+                    ofVec2f::set(next);
             }
         }
         void set(float x, float y ){
             if ( bUseBezier ){
                 bezierA.set(x,y);
             } else {
-                ofVec3f::set(x,y);
+                ofVec2f::set(x,y);
             }
         }
         
@@ -93,11 +93,12 @@ namespace mm {
         
         // utils
         mutex mux;
-        int getClosestIndex( const ofVec3f & p );
+        int getClosestIndex( const ofVec2f & p );
+        bool inside( const ofVec2f & p, mm::Mode drawMode );
         
     protected:
         Point * selected;
-//        ofVec3f * selectedComp;
+//        ofVec2f * selectedComp;
         ofVec2f pointPressed, originalCenter; // where shape was clicked
         bool bMouseDown, bShapeSelected;
         

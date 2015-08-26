@@ -18,6 +18,8 @@ namespace mm {
         bNeedToResize = false;
         bAddCursor = false;
         currentShape = nullptr;
+        externalMouseEventsActive = false;
+        maxAlpha = 0.;
     }
     
     //--------------------------------------------------------------
@@ -27,9 +29,6 @@ namespace mm {
         ofRemoveListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
 //        ofRemoveListener(//toolBar.onChangeTool, this, &Manager::onChangeMode);
-        
-        ofRemoveListener(ofEvents().update, this, &Manager::update);
-        ofRemoveListener(ofEvents().draw, this, &Manager::draw);
         
         ofRemoveListener(ofEvents().keyPressed, this, &Manager::keyPressed);
         ofRemoveListener(ofEvents().mousePressed, this, &Manager::mousePressed);
@@ -73,9 +72,6 @@ namespace mm {
         renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
         
         // get this show on the road
-        ofAddListener(ofEvents().update, this, &Manager::update);
-        ofAddListener(ofEvents().draw, this, &Manager::draw);
-        
         ofAddListener(ofEvents().keyPressed, this, &Manager::keyPressed);
         ofAddListener(ofEvents().mousePressed, this, &Manager::mousePressed);
         ofAddListener(ofEvents().mouseDragged, this, &Manager::mouseDragged);
@@ -86,7 +82,22 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Manager::update(ofEventArgs & e ){
+    void Manager::setAndConfigureWindow( NSWindow * window, NSView * view ){
+        this->window = window;
+        this->glView = view;
+        
+        [this->window setStyleMask:NSBorderlessWindowMask];
+        [this->window setLevel:NSMainMenuWindowLevel];
+        [this->window setHasShadow:NO];
+        [this->window setBackgroundColor:[NSColor clearColor]];
+        [this->window setOpaque:NO];
+        [this->window setIgnoresMouseEvents:YES];
+        NSRect rect = rc::rectForAllScreens();
+        [this->window setFrame:rect display:YES ];
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::update( ){
         if ( bNeedToResize ){
             renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
         }
@@ -101,7 +112,7 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Manager::draw(ofEventArgs & e ){
+    void Manager::draw( ){
         renderFbo.begin();
         ofClear(0);
         ofSetColor(255);
@@ -113,6 +124,11 @@ namespace mm {
             case MODE_ADD:
                 break;
             case MODE_RENDER:
+                maxAlpha = maxAlpha * .9 + MM_RENDER_ALPHA * .1;
+                break;
+                
+            case MODE_RENDER_PREVIEW:
+                maxAlpha = maxAlpha * .9 + MM_RENDER_PREVIEW_ALPHA * .1;
                 break;
             case MODE_EDIT:
                 break;
@@ -134,6 +150,7 @@ namespace mm {
         
         ofSetColor(255);
         renderShader.begin();
+        renderShader.setUniform1f("maxAlpha", maxAlpha);
         renderShader.setUniform1i("mode", (int) currentMode );
         renderShader.setUniform4f("ko_color", SHAPE_COLOR.r/255.f,SHAPE_COLOR.g/255.f,SHAPE_COLOR.b/255.f,SHAPE_COLOR.a/255.f );
         renderShader.setUniformTexture("tex0", renderFbo.getTexture(0), 0);
@@ -250,7 +267,6 @@ namespace mm {
                         }
                     }
                     if ( !bFound ){
-                        
                         currentShape = shapes[createShape()];
                     }
                 }
@@ -266,6 +282,14 @@ namespace mm {
                 break;
                 
             case MODE_RENDER:
+                break;
+            case MODE_RENDER_PREVIEW:
+                for ( auto & it : shapes ){
+                    if ( it.second->inside( e, currentMode ) ){
+                        setMode(MODE_RENDER);
+                        break;
+                    }
+                }
                 break;
         }
     }
@@ -447,26 +471,28 @@ namespace mm {
         Mode newMode = (Mode)(currentMode + 1);
         if ( newMode > MODE_EDIT ){
             newMode = MODE_RENDER;
-            rc::setWindowLevel(NSScreenSaverWindowLevel);
-            rc::cocoaWindow()->setWindowPosition(0,0);
-            
-            for ( auto & s : shapes ){
-                auto & p = s.second->getPoints();
-                for (auto & v : p ){
-                    v.y += 50;
-                }
-            }
-        } else if ( newMode == MODE_ADD ){
-            rc::setWindowLevel(NSMainMenuWindowLevel);
-            rc::cocoaWindow()->setWindowPosition(0,50);
-            
-            for ( auto & s : shapes ){
-                auto & p = s.second->getPoints();
-                for (auto & v : p ){
-                    v.y -= 50;
-                }
-            }
         }
+//
+//            [window setLevel:NSScreenSaverWindowLevel];
+////            rc::setWindowPosition( window, glView, ofPoint(0,0));
+////            
+////            for ( auto & s : shapes ){
+////                auto & p = s.second->getPoints();
+////                for (auto & v : p ){
+////                    v.y += 50;
+////                }
+////            }
+//        } else if ( newMode == MODE_ADD ){
+//            [window setLevel:NSMainMenuWindowLevel];
+////            rc::setWindowPosition( window, glView, ofPoint(0,50));
+////            
+////            for ( auto & s : shapes ){
+////                auto & p = s.second->getPoints();
+////                for (auto & v : p ){
+////                    v.y -= 50;
+////                }
+////            }
+//        }
         setMode(newMode);
     }
     
@@ -493,52 +519,97 @@ namespace mm {
                     currentShape = nullptr;
                 }
                 
-                
-                
-                [rc::glWindow() setIgnoresMouseEvents:NO];
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
+                setExternalMouse(false);
+                [window setIgnoresMouseEvents:NO];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
                 [cursorEditA set];
+                [window setLevel:NSMainMenuWindowLevel];
                 break;
+                
             case MODE_ADD:
-                [rc::glWindow() setIgnoresMouseEvents:NO];
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
+                setExternalMouse(false);
+                [window setIgnoresMouseEvents:NO];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
                 [cursorAdd set];
+                [window setLevel:NSMainMenuWindowLevel];
                 break;
                 
             case MODE_RENDER:
                 currentShape = nullptr;
-                [rc::glWindow() setIgnoresMouseEvents:YES];
+                [window setIgnoresMouseEvents:YES];
+                setExternalMouse(true);
                 
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
+                [window setLevel:NSScreenSaverWindowLevel];
+                break;
+            
+            case MODE_RENDER_PREVIEW:
+                currentShape = nullptr;
+                [window setIgnoresMouseEvents:NO];
+                
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
+                [cursorStandard set];
+                [window setLevel:NSMainMenuWindowLevel];
                 break;
         }
         
         // set cursor
         switch (currentMode) {
             case MODE_WELCOME:
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
                 break;
             case MODE_EDIT:
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
                 [cursorEditA set];
                 break;
                 
             case MODE_EDIT_DEL:
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorEditD];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditD];
                 [cursorEditD set];
                 break;
                 
             case MODE_ADD:
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
                 [cursorAdd set];
                 break;
                 
             case MODE_RENDER:
-                [rc::glView() addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
                 break;
+        }
+    }
+    
+    
+    //--------------------------------------------------------------
+    // UTILS
+    //--------------------------------------------------------------
+    
+    void Manager::mouseDownOutside( NSEvent * theEvent) {
+        ofMouseEventArgs args;
+        ofPoint p = rc::ofPointFromOutsideEvent(glView, theEvent);
+        for ( auto & it : shapes ){
+            if ( it.second->inside( p, currentMode ) ){
+                setMode(MODE_RENDER_PREVIEW);
+                break;
+            }
+        }
+    }
+    
+    void Manager::setExternalMouse( bool bOn ){
+        if (bOn){
+            
+            leftMouseDownHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDownMask handler:^(NSEvent * mouseEvent) {
+                mouseDownOutside(mouseEvent);
+            }];
+            
+            externalMouseEventsActive = true;
+        } else if (externalMouseEventsActive) {
+            [NSEvent removeMonitor:leftMouseDownHandler];
+            leftMouseDownHandler = nil;
+            externalMouseEventsActive = false;
         }
     }
 }

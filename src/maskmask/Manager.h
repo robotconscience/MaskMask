@@ -31,9 +31,13 @@ namespace mm {
         void    removeShape( int shapeId );
         Shape & getShape( int shapeId );
         
+        // hack-y, for now!
+        void setAndConfigureWindow( NSWindow * window, NSView * view );
+        
+        void update();
+        void draw();
+        
     protected:
-        void update( ofEventArgs & e );
-        void draw( ofEventArgs & e );
         void keyPressed( ofKeyEventArgs & e );
         void mousePressed( ofMouseEventArgs & e );
         void mouseDragged( ofMouseEventArgs & e );
@@ -54,12 +58,15 @@ namespace mm {
         ofFbo       renderFbo;
         Mode        currentMode;
         
+        // aesthetix
+        float       maxAlpha;
+        
         // shapes
         std::map<int, Shape *> shapes;
         Shape * currentShape;
         
         // toolz
-//        ToolBar toolBar;
+        ToolBar toolBar;
         
         // switches
         bool bNeedToResize; // set when window resizes
@@ -68,5 +75,15 @@ namespace mm {
         // workaround: queues to fix funky threading with mouse
         vector<ofVec2f> pointQueue;
         mutex mux;
+        
+        // references
+        NSWindow * window;
+        NSView * glView;
+        
+        // cocoa mouse stuff
+        id leftMouseDownHandler;
+        void mouseDownOutside( NSEvent * theEvent);
+        void setExternalMouse( bool bOn );
+        bool externalMouseEventsActive;
     };
 }

@@ -8,20 +8,23 @@
 
 #pragma once
 
-#include "ofxCocoaWindow.h"
+#include "ofMain.h"
+#include "ofxCocoaGLView.h"
 
 // most of these are from Memo Atken's (memo.tv) ofxCocoa addon
 
 namespace rc {
-    ofxCocoaWindow * cocoaWindow();
-    GLView * glView();
-    NSWindow * glWindow();
     NSScreen *screen(int screenIndex);
-    NSScreen *currentScreen();
-    NSScreen *mainScreen();
+    NSScreen *mainScreen( NSWindow * window );
     NSRect rectForScreen(int screenIndex);
     NSRect rectForCurrentScreen();
-    NSRect rectForMainScreen();
+    NSRect rectForMainScreen( NSWindow * window );
     NSRect rectForAllScreens();
-    void   setWindowLevel( NSInteger newLevel );
+    
+    void setWindowPosition( NSWindow * window, NSView * view, const ofPoint & position );
+    
+    static ofPoint ofPointFromOutsideEvent(NSView * view, NSEvent* theEvent) {
+        NSPoint p = [view convertPoint:[theEvent locationInWindow] fromView:nil];
+        return ofPoint(p.x, p.y, 0);
+    }
 }

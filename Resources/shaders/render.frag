@@ -12,13 +12,16 @@
 uniform vec4 ko_color;
 uniform sampler2DRect tex0;
 uniform int mode;
+uniform float maxAlpha;
 
 void main(){
     // "render"
-    if ( mode == 1 ){
+    if ( mode == 1 || mode == 2 ){
         vec4 texColor = texture2DRect(tex0, gl_TexCoord[0].st);
         if ( texColor == ko_color ) texColor = vec4(0,0,0,0);
-        else texColor = vec4(0,0,0,1);
+        else {
+            texColor = vec4(0,0,0, maxAlpha);
+        }
         
         gl_FragColor = texColor;
         

@@ -8,4 +8,4 @@ cd ../../../addons
 PREFIX="git clone https://github.com/"
 
 # ui
-${PREFIX}robotconscience/ofxCocoa.git --branch dev
+${PREFIX}HalfdanJ/ofxCocoaGLView.git
