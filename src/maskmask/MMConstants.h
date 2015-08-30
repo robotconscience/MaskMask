@@ -58,27 +58,17 @@ namespace mm {
     // cursors
     static NSCursor * cursorStandard, *cursorAdd, *cursorEditA, *cursorEditD, *cursorDel;
     
-    // toolbar
-    static const ofColor TOOLBAR_BG_COLOR( ofColor::fromHex(0x6db4d6) );
-    
-    static const string TOOLBAR_FONT = "fonts/maax.otf";
-    static const string TOOLBAR_FONT_BOLD = "fonts/maaxbold.otf";
-
-    static const int TOOLBAR_FONT_SIZE = 15;
-    static const int TOOLBAR_PADDING = 15;
-    static const int TOOLBAR_TOOL_SIZE = 40;
-    
     // phontz
     class FontManager {
     public:
         static FontManager & get(){
             static FontManager me;
             if ( !me.fontBold.isLoaded()){
-                me.fontBold.load( ofToDataPath(TOOLBAR_FONT_BOLD), TOOLBAR_FONT_SIZE );
+//                me.fontBold.load( ofToDataPath(TOOLBAR_FONT_BOLD), TOOLBAR_FONT_SIZE );
             }
             
             if ( !me.font.isLoaded()){
-                me.font.load( ofToDataPath(TOOLBAR_FONT), TOOLBAR_FONT_SIZE );
+//                me.font.load( ofToDataPath(TOOLBAR_FONT), TOOLBAR_FONT_SIZE );
             }
             return me;
         }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		012386001B0BACAA0012EBF5 /* cursors in Resources */ = {isa = PBXBuildFile; fileRef = 012385FF1B0BACAA0012EBF5 /* cursors */; };
 		012386041B0BC7790012EBF5 /* Shape.mm in Sources */ = {isa = PBXBuildFile; fileRef = 012386021B0BC7790012EBF5 /* Shape.mm */; };
-		012386071B0BC81F0012EBF5 /* ToolBar.mm in Sources */ = {isa = PBXBuildFile; fileRef = 012386051B0BC81F0012EBF5 /* ToolBar.mm */; };
 		0123860D1B0BD1790012EBF5 /* tools in Resources */ = {isa = PBXBuildFile; fileRef = 0123860C1B0BD1790012EBF5 /* tools */; };
 		0192029F1B93A536001CD172 /* settings.xml in Resources */ = {isa = PBXBuildFile; fileRef = 0192029E1B93A536001CD172 /* settings.xml */; };
 		019424B51B051FE60005861A /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = 019424B41B051FDE0005861A /* shaders */; };
@@ -76,12 +75,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		011AC5F91B867175004D2D7B /* ToolBarApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ToolBarApp.h; path = maskmask/ToolBarApp.h; sourceTree = "<group>"; };
 		012385FF1B0BACAA0012EBF5 /* cursors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cursors; sourceTree = "<group>"; };
 		012386021B0BC7790012EBF5 /* Shape.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Shape.mm; path = maskmask/Shape.mm; sourceTree = "<group>"; };
 		012386031B0BC7790012EBF5 /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shape.h; path = maskmask/Shape.h; sourceTree = "<group>"; };
-		012386051B0BC81F0012EBF5 /* ToolBar.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ToolBar.mm; path = maskmask/ToolBar.mm; sourceTree = "<group>"; };
-		012386061B0BC81F0012EBF5 /* ToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolBar.h; path = maskmask/ToolBar.h; sourceTree = "<group>"; };
 		012386081B0BC8CC0012EBF5 /* MaskMask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MaskMask.h; path = maskmask/MaskMask.h; sourceTree = "<group>"; };
 		0123860C1B0BD1790012EBF5 /* tools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tools; sourceTree = "<group>"; };
 		0192029E1B93A536001CD172 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
@@ -166,9 +162,6 @@
 				019BB0D41B04FF8D00080418 /* Manager.mm */,
 				012386031B0BC7790012EBF5 /* Shape.h */,
 				012386021B0BC7790012EBF5 /* Shape.mm */,
-				012386061B0BC81F0012EBF5 /* ToolBar.h */,
-				012386051B0BC81F0012EBF5 /* ToolBar.mm */,
-				011AC5F91B867175004D2D7B /* ToolBarApp.h */,
 			);
 			name = maskmask;
 			sourceTree = "<group>";
@@ -428,7 +421,6 @@
 				01AC48181B8E5104008E6E39 /* ofxCocoaUtils.mm in Sources */,
 				012386041B0BC7790012EBF5 /* Shape.mm in Sources */,
 				019BB0D51B04FF8D00080418 /* Manager.mm in Sources */,
-				012386071B0BC81F0012EBF5 /* ToolBar.mm in Sources */,
 				01AC48101B8E4C9B008E6E39 /* ToolsView.mm in Sources */,
 				01AC480F1B8E4C9B008E6E39 /* MainView.mm in Sources */,
 				01E82E2D1AF2BF0400DA55CF /* StatusbarDelegate.mm in Sources */,

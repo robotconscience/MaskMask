@@ -29,8 +29,6 @@ namespace mm {
         ofRemoveListener(statusMenu.onReload, this, &Manager::onReload);
         ofRemoveListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
-//        ofRemoveListener(//toolBar.onChangeTool, this, &Manager::onChangeMode);
-        
         ofRemoveListener(ofEvents().keyPressed, this, &Manager::keyPressed);
         ofRemoveListener(ofEvents().mousePressed, this, &Manager::mousePressed);
         ofRemoveListener(ofEvents().mouseDragged, this, &Manager::mouseDragged);
@@ -45,10 +43,6 @@ namespace mm {
         ofAddListener(statusMenu.onSave, this, &Manager::onSave);
         ofAddListener(statusMenu.onReload, this, &Manager::onReload);
         ofAddListener(statusMenu.onToggleMode, this, &Manager::onMode);
-        
-        // build tool bar
-//        //toolBar.setup();
-//        ofAddListener(//toolBar.onChangeTool, this, &Manager::onChangeMode);
         
         // build cursor images
         @autoreleasepool {
@@ -135,11 +129,6 @@ namespace mm {
                 break;
             case MODE_EDIT_DEL:
                 break;
-        }
-        
-        // toolbar
-        if ( currentMode >= MODE_ADD ){
-//            //toolBar.draw();
         }
         
         if ( shapes.size() > 0 ){
@@ -250,14 +239,6 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::mousePressed( ofMouseEventArgs & e ){
-        
-        // toolbar stuff
-        if ( currentMode >= MODE_ADD ){
-//            if( //toolBar.mousePressed(e) ){
-//                return;
-//            }
-        }
-        
         switch (currentMode) {
             case MODE_WELCOME:
                 break;
@@ -331,10 +312,6 @@ namespace mm {
             case MODE_RENDER:
                 break;
         }
-        // toolbar stuff
-        if ( currentMode >= MODE_ADD ){
-            //toolBar.mouseDragged(e);
-        }
     }
     
     //--------------------------------------------------------------
@@ -355,11 +332,6 @@ namespace mm {
                 
             case MODE_RENDER:
                 break;
-        }
-        
-        // toolbar stuff
-        if ( currentMode >= MODE_ADD ){
-            //toolBar.mouseReleased(e);
         }
     }
     
@@ -385,11 +357,6 @@ namespace mm {
                 
             case MODE_RENDER:
                 break;
-        }
-        
-        // toolbar stuff
-        if ( currentMode >= MODE_ADD ){
-            //toolBar.mouseMoved(e);
         }
     }
     
