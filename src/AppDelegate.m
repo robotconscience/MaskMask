@@ -32,4 +32,22 @@
 {
 }
 
+-(IBAction) save:(id) sender
+{
+    [mainView save];
+}
+-(IBAction) saveAs:(id) sender
+{
+    [mainView saveAs];
+}
+-(IBAction) load:(id) sender;
+{
+    [mainView load];
+}
+
+-(IBAction) reload:(id) sender;
+{
+    [mainView reload];
+}
+
 @end

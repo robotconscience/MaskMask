@@ -88,7 +88,7 @@ namespace mm {
         this->glView = view;
         
         [this->window setStyleMask:NSBorderlessWindowMask];
-        [this->window setLevel:NSMainMenuWindowLevel];
+        [this->window setLevel:NSFloatingWindowLevel];
         [this->window setHasShadow:NO];
         [this->window setBackgroundColor:[NSColor clearColor]];
         [this->window setOpaque:NO];
@@ -403,7 +403,9 @@ namespace mm {
     //--------------------------------------------------------------
     
     //--------------------------------------------------------------
-    void Manager::onSave(){
+    void Manager::save(){
+        auto & settings = Settings::get();
+        
         ofXml xmlOut;
         xmlOut.addChild("shapes");
         xmlOut.setToChild(0);
@@ -432,19 +434,31 @@ namespace mm {
             child++;
         }
         
-        if ( !ofDirectory(ofToDataPath("settings")).exists() ){
-            ofDirectory dir(ofToDataPath("settings"));
-            dir.create();
-        }
-        xmlOut.save(ofToDataPath("settings/settings.xml"));
+        xmlOut.save(ofToDataPath(settings.settingsFile));
     }
     
     //--------------------------------------------------------------
-    void Manager::onReload(){
+    void Manager::saveAs( string dest ){
+        Settings::get().settingsFile = dest;
+        Settings::get().save();
+        save();
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::reload(){
+        shapes.clear();
+        
+        auto & settings = Settings::get();
+        load( settings.settingsFile );
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::load( string settings ){
         ofXml xml;
-        if ( xml.load(ofToDataPath("settings/settings.xml"))){
-//            xml.setToChild(0);
+        if ( xml.load(ofToDataPath(settings))){
+            //            xml.setToChild(0);
             int nShapes = xml.getNumChildren();
+            
             for ( int i=0; i<nShapes; i++){
                 createShape();
             }
@@ -474,9 +488,20 @@ namespace mm {
                 
                 xml.setToParent();
                 currentShape = s.second;
+                shapeIndex++;
             }
             xml.setToParent();
         }
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::onSave(){
+        save();
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::onReload(){
+        reload();
     }
     
     //--------------------------------------------------------------
@@ -496,7 +521,7 @@ namespace mm {
 ////                }
 ////            }
 //        } else if ( newMode == MODE_ADD ){
-//            [window setLevel:NSMainMenuWindowLevel];
+//            [window setLevel:NSFloatingWindowLevel];
 ////            rc::setWindowPosition( window, glView, ofPoint(0,50));
 ////            
 ////            for ( auto & s : shapes ){
@@ -536,7 +561,7 @@ namespace mm {
                 [window setIgnoresMouseEvents:NO];
                 [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
                 [cursorEditA set];
-                [window setLevel:NSMainMenuWindowLevel];
+                [window setLevel:NSFloatingWindowLevel];
                 break;
                 
             case MODE_ADD:
@@ -544,7 +569,7 @@ namespace mm {
                 [window setIgnoresMouseEvents:NO];
                 [glView addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
                 [cursorAdd set];
-                [window setLevel:NSMainMenuWindowLevel];
+                [window setLevel:NSFloatingWindowLevel];
                 break;
                 
             case MODE_RENDER:
@@ -563,7 +588,7 @@ namespace mm {
                 
                 [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
                 [cursorStandard set];
-                [window setLevel:NSMainMenuWindowLevel];
+                [window setLevel:NSFloatingWindowLevel];
                 break;
         }
         
@@ -603,11 +628,14 @@ namespace mm {
     void Manager::mouseDownOutside( NSEvent * theEvent) {
         ofMouseEventArgs args;
         ofPoint p = rc::ofPointFromOutsideEvent(glView, theEvent);
+        bool bGood = true;
         for ( auto & it : shapes ){
             if ( it.second->inside( p, currentMode ) ){
-                setMode(MODE_RENDER_PREVIEW);
-                break;
+                bGood = false;
             }
+        }
+        if ( bGood ){
+            setMode(MODE_RENDER_PREVIEW);
         }
     }
     

@@ -79,6 +79,8 @@
 	
 }
 
+#pragma mark Interface Actions
+
 //--------------------------------------------------------------
 - (void) changeMode:(int) whichMode
 {
@@ -97,5 +99,36 @@
     
     manager->setDebugColor(colorOut);
 }
+
+//--------------------------------------------------------------
+- (void) save
+{
+    manager->save();
+}
+
+//--------------------------------------------------------------
+- (void) saveAs
+{
+    ofFileDialogResult r = ofSystemSaveDialog("mask_settings.xml", "Save mask");
+    if ( r.bSuccess ){
+        manager->saveAs(r.getPath());
+    }
+}
+
+//--------------------------------------------------------------
+- (void) load
+{
+    ofFileDialogResult r = ofSystemLoadDialog("Load mask", false, "../../" );
+    if ( r.bSuccess ){
+        manager->load(r.getPath());
+    }
+}
+//--------------------------------------------------------------
+- (void) reload
+{
+    manager->reload();
+}
+
+
 
 @end

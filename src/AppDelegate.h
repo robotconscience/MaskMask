@@ -15,4 +15,10 @@
 -(IBAction)changeColor:(id)sender;
 -(IBAction)openPanel:(id)sender;
 
+// save / load
+-(IBAction) save:(id) sender;
+-(IBAction) saveAs:(id) sender;
+-(IBAction) load:(id) sender;
+-(IBAction) reload:(id) sender;
+
 @end

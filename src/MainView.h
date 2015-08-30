@@ -25,4 +25,9 @@
 - (void) changeMode:(int) whichMode;
 - (void) newColor:(NSColor *) color;
 
+- (void) save;
+- (void) saveAs;
+- (void) load;
+- (void) reload;
+
 @end

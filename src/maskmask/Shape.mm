@@ -394,6 +394,6 @@ namespace mm {
         
         bool insideShape = path.getOutline()[0].inside(p);
         
-        return drawMode == MODE_RENDER ? !insideShape : insideShape;
+        return insideShape;//drawMode == MODE_RENDER ? !insideShape : insideShape;
     }
 }

@@ -91,4 +91,52 @@ namespace mm {
             
         }
     };
+    
+    // settings
+    class Settings {
+    public:
+        
+        static Settings& get()
+        {
+            static Settings inst; // Guaranteed to be destroyed.
+            static bool bInstance = false;
+            
+            if ( !bInstance ){
+                // these should be inside 'Resources'
+                ofXml settings;
+                settings.load(ofToDataPath( "settings.xml" ));
+                
+                settings.setTo("settings");
+                inst.settingsFile = settings.getValue("settingsFile");
+                cout << inst.settingsFile << endl;
+                
+                bInstance = true;
+            }
+            
+            return inst;
+        }
+        
+        static void save()
+        {
+            auto & inst = get();
+            ofXml settings;
+            settings.addChild("settings");
+            settings.setTo("settings");
+            settings.addValue("settingsFile", inst.settingsFile);
+            settings.save(ofToDataPath( "settings.xml" ));
+        }
+        
+        string settingsFile;
+        
+    private:
+        
+        Settings(){};
+        
+        // C++ 11
+        // =======
+        // We can use the better technique of deleting the methods
+        // we don't want.
+        Settings(Settings const&)               = delete;
+        void operator=(Settings const&)  = delete;
+    };
 }

@@ -40,6 +40,12 @@ namespace mm {
         // aesthetic tweakers
         void setDebugColor( ofColor & c );
         
+        // save / reload / save as / load
+        void save();
+        void saveAs( string dest );
+        void reload();
+        void load( string settings );
+        
     protected:
         void keyPressed( ofKeyEventArgs & e );
         void mousePressed( ofMouseEventArgs & e );
