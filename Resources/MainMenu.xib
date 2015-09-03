@@ -301,7 +301,7 @@
 			</object>
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{0, 397}, {10, 10}}</string>
+				<string key="NSWindowRect">{{0, 0}, {10, 10}}</string>
 				<int key="NSWTFlags">1685591040</int>
 				<string key="NSWindowTitle"/>
 				<string key="NSWindowClass">NSWindow</string>
@@ -317,11 +317,10 @@
 							<string key="NSFrameSize">{17, 10}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 								<object class="NSMutableData" key="NSPixelAttributes">
-									<bytes key="NS.bytes">AAAABQAAAAA</bytes>
+									<bytes key="NS.bytes">AAAABQAAAEkAAAA7AAAAOAAAABAAAAA3AAAAAQAAAAA</bytes>
 								</object>
 							</object>
 						</object>
@@ -345,7 +344,7 @@
 			<object class="NSWindowTemplate" id="145233056">
 				<int key="NSWindowStyleMask">5</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{131, 158}, {183, 304}}</string>
+				<string key="NSWindowRect">{{161, 381}, {183, 304}}</string>
 				<int key="NSWTFlags">-461896704</int>
 				<string key="NSWindowTitle">Tools</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -521,7 +520,7 @@
 									<int key="NSAuxButtonType">6</int>
 								</object>
 							</array>
-							<string key="NSCellSize">{161, 27}</string>
+							<string key="NSCellSize">{101, 20}</string>
 							<string key="NSIntercellSpacing">{4, 2}</string>
 							<int key="NSMatrixFlags">1151868928</int>
 							<string key="NSCellClass">NSActionCell</string>
@@ -596,7 +595,6 @@
 							<string key="NSFrame">{{11, 48}, {161, 23}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1609</string>
 							<bool key="NSEnabled">YES</bool>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -1154,6 +1152,8 @@
 				<string key="536.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="NO" key="575.IBNSWindowAutoPositionCentersHorizontal"/>
+				<boolean value="NO" key="575.IBNSWindowAutoPositionCentersVertical"/>
 				<string key="575.IBPersistedLastKnownCanvasPosition">{-2698.5, -251}</string>
 				<string key="575.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="575.NSWindowTemplate.visibleAtLaunch"/>

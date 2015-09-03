@@ -1,3 +1,7 @@
 <settings>
     <settingsFile>../../../mask_settings.xml</settingsFile>
+    <welcome>
+        <didWelcome>0</didWelcome>
+        <timing>5000</timing>
+    </welcome>
 </settings>

@@ -58,7 +58,11 @@ namespace mm {
             cursorEditD = [[NSCursor alloc] initWithImage:editImageB hotSpot:NSMakePoint(0,0) ];
             cursorDel = [[NSCursor alloc] initWithImage:delImage hotSpot:NSMakePoint(0,0) ];
         }
-    
+        
+        // build tutorial
+        bool doTutorial = tutorialMgr.setup();
+        if (doTutorial) currentMode = MODE_WELCOME;
+        
         // load settings
         onReload();
         
@@ -114,7 +118,12 @@ namespace mm {
         
         // mode-specific zones
         switch( currentMode ){
-            case MODE_WELCOME:
+            case MODE_WELCOME:{
+                bool bKeepGoing = tutorialMgr.draw();
+                if ( !bKeepGoing ){
+                    setMode(MODE_ADD);
+                }
+            }
                 break;
             case MODE_ADD:
                 break;
@@ -130,10 +139,11 @@ namespace mm {
             case MODE_EDIT_DEL:
                 break;
         }
-        
-        if ( shapes.size() > 0 ){
-            for ( auto & it : shapes ){
-                it.second->draw( currentMode );
+        if ( currentMode != MODE_WELCOME ){
+            if ( shapes.size() > 0 ){
+                for ( auto & it : shapes ){
+                    it.second->draw( currentMode );
+                }
             }
         }
         renderFbo.end();
@@ -250,18 +260,20 @@ namespace mm {
                         currentShape->addVertex(e);
                     }
                 } else {
+                    // OPEN QUESTION: where do we allow dragging??
                     bool bFound = false;
-                    if ( shapes.size() > 0 ){
-                        for ( auto & it : shapes ){
-                            if ( it.second->mousePressed(e, currentMode) ){
-                                currentShape = it.second;
-                                bFound = true;
-                                break;
-                            }
-                        }
-                    }
+//                    if ( shapes.size() > 0 ){
+//                        for ( auto & it : shapes ){
+//                            if ( it.second->mousePressed(e, currentMode) ){
+//                                currentShape = it.second;
+//                                bFound = true;
+//                                break;
+//                            }
+//                        }
+//                    }
                     if ( !bFound ){
                         currentShape = shapes[createShape()];
+                        currentShape->addVertex(e);
                     }
                 }
                 break;
@@ -310,6 +322,8 @@ namespace mm {
                 break;
                 
             case MODE_RENDER:
+            case MODE_RENDER_PREVIEW:
+            case MODE_EDIT_DEL:
                 break;
         }
     }
@@ -331,6 +345,8 @@ namespace mm {
                 break;
                 
             case MODE_RENDER:
+            case MODE_RENDER_PREVIEW:
+            case MODE_EDIT_DEL:
                 break;
         }
     }
@@ -356,6 +372,7 @@ namespace mm {
                 break;
                 
             case MODE_RENDER:
+            case MODE_RENDER_PREVIEW:
                 break;
         }
     }
@@ -454,7 +471,6 @@ namespace mm {
                 }
                 
                 xml.setToParent();
-                currentShape = s.second;
                 shapeIndex++;
             }
             xml.setToParent();
@@ -517,6 +533,11 @@ namespace mm {
         
         switch (newMode) {
             case MODE_WELCOME:
+                setExternalMouse(false);
+                [window setIgnoresMouseEvents:NO];
+                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
+                [cursorEditA set];
+                [window setLevel:NSFloatingWindowLevel];
                 break;
             case MODE_EDIT:
                 if ( currentShape != nullptr ){

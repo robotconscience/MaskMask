@@ -14,6 +14,8 @@
 #include "StatusbarDelegate.h"
 #include "ofxCocoaUtils.h"
 
+#include "Tutorial.h"
+
 namespace mm {
     
     class Manager {
@@ -91,5 +93,8 @@ namespace mm {
         void mouseDownOutside( NSEvent * theEvent);
         void setExternalMouse( bool bOn );
         bool externalMouseEventsActive;
+        
+        // documentation
+        Tutorial tutorialMgr;
     };
 }

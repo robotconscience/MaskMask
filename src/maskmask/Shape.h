@@ -93,8 +93,9 @@ namespace mm {
         
         // utils
         mutex mux;
-        int getClosestIndex( const ofVec2f & p );
+        int getInsertIndex( const ofVec2f & p );
         bool inside( const ofVec2f & p, mm::Mode drawMode );
+        vector<int> getLineSegment( const ofVec2f & p );
         
         void setFillColor( ofColor fill );
         

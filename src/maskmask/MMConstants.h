@@ -98,7 +98,10 @@ namespace mm {
                 
                 settings.setTo("settings");
                 inst.settingsFile = settings.getValue("settingsFile");
-                cout << inst.settingsFile << endl;
+                settings.setTo("welcome");
+                inst.bDidWelcome = settings.getBoolValue("didWelcome");
+                inst.welcomeMillis = settings.getIntValue("timing");
+                settings.setToParent();
                 
                 bInstance = true;
             }
@@ -113,10 +116,17 @@ namespace mm {
             settings.addChild("settings");
             settings.setTo("settings");
             settings.addValue("settingsFile", inst.settingsFile);
+            settings.addChild("welcome");
+            settings.setTo("welcome");
+            settings.addValue("didWelcome", inst.bDidWelcome);
+            settings.addValue("timing", inst.welcomeMillis);
+            settings.setToParent();
             settings.save(ofToDataPath( "settings.xml" ));
         }
         
-        string settingsFile;
+        string  settingsFile;
+        bool    bDidWelcome;
+        int     welcomeMillis;
         
     private:
         

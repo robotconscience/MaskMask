@@ -263,22 +263,12 @@ namespace mm {
                         p.bezierA.set(pointToAdd);
                         p.bezierB.set(pointToAdd);
                         
-                        nearestIndex = getClosestIndex( pointToAdd );
+//                        nearestIndex = getLineSegment(pointToAdd)[0];   
                         
-                        int index = nearestIndex;
+                        points.insert(points.begin() + nearestIndex + 1, p);
                         
-                        // hm
-                        auto & tp = points[nearestIndex];
+                        cout << "INSERT AFTER "<<nearestIndex<<endl;
                         
-                        // point should be 'in front' of tp
-                        if ( tp.x - p.x > 0){
-                            nearestIndex++;
-                        }
-                        
-                        
-                        nearestIndex %= points.size();
-                        
-                        points.insert(points.begin() + nearestIndex, p);
                         bChanged = true;
                         bFound = true;
                     }
@@ -350,12 +340,17 @@ namespace mm {
             if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
                 selected = &v;
                 bFound = true;
+                break;
             }
         }
         if ( !bFound ) selected = NULL;
         if ( mode == MODE_EDIT &&  path.getOutline().size() > 0 ){
-            pointToAdd.set( path.getOutline()[0].getClosestPoint(e) );
-            nearestIndex = getClosestIndex( pointToAdd );
+            auto & poly = path.getOutline()[0];
+            
+            pointToAdd.set( poly.getClosestPoint(e, &nearestIndex) );
+//            cout << "1:"<<nearestIndex << endl;
+            nearestIndex = getInsertIndex( pointToAdd );
+//            cout << "2:"<<nearestIndex << endl;
         }
     }
     
@@ -366,7 +361,7 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    int Shape::getClosestIndex( const ofVec2f & p ){
+    int Shape::getInsertIndex( const ofVec2f & p ){
         float dist = FLT_MAX;
         int closest = -1;
         
@@ -379,7 +374,31 @@ namespace mm {
             }
             index++;
         }
-        return closest;
+        
+        int next = closest + 1 < points.size() ? closest + 1 : 0;
+        int prev = closest -1 >= 0 ? closest - 1 : points.size()-1;
+        
+        ofVec2f cP = points[closest];
+        ofVec2f nP = points[next];
+        ofVec2f pP = points[prev];
+        
+        // closest = nearest point
+        // are we bettwen closest and next or closest and prev?
+        
+        int ret = closest;
+        
+        cout<<ofSign(p.x - cP.x)<<":"<<ofSign(p.x - nP.x)<<":"<<ofSign(p.x - pP.x)<<endl;
+        cout<<ofSign(p.y - cP.y)<<":"<<ofSign(p.y - nP.y)<<":"<<ofSign(p.x - pP.x)<<endl;
+        
+//        cout << dC <<":"<<dP<<":"<<dN<<endl;
+        
+        
+        return ret;
+    }
+    
+    //--------------------------------------------------------------
+    vector<int> Shape::getLineSegment( const ofVec2f & p ){
+        
     }
     
     //--------------------------------------------------------------
