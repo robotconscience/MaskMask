@@ -28,5 +28,12 @@
 	<false/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Anonymous_Pro.ttf</string>
+		<string>Anonymous_Pro_B.ttf</string>
+		<string>Anonymous_Pro_BI.ttf</string>
+		<string>Anonymous_Pro_I.ttf</string>
+	</array>
 </dict>
 </plist>
