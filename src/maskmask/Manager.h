@@ -47,6 +47,9 @@ namespace mm {
         void reload();
         void load( string settings );
         
+        // getters
+        bool getShowTools();
+        
     protected:
         void keyPressed( ofKeyEventArgs & e );
         void mousePressed( ofMouseEventArgs & e );
@@ -96,5 +99,7 @@ namespace mm {
         
         // documentation
         Tutorial tutorialMgr;
+        void showTools();
+        bool bNeedToShowTools;
     };
 }

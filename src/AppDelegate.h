@@ -21,4 +21,7 @@
 -(IBAction) load:(id) sender;
 -(IBAction) reload:(id) sender;
 
+-(void) showTools;
+-(void) hideTools;
+
 @end

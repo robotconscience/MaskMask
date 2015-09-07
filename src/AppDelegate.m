@@ -12,12 +12,12 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [[picker colorPanel] setLevel:NSMainMenuWindowLevel+1];
+    [mainView setAppDelegate:self];
 }
 
 
 -(void)changeMode:(id)sender
 {
-    
     [mainView changeMode:[[sender selectedCell] tag]];
 }
 
@@ -48,6 +48,17 @@
 -(IBAction) reload:(id) sender;
 {
     [mainView reload];
+}
+
+
+-(void) showTools
+{
+    [[toolsView window] makeKeyAndOrderFront:nil];
+}
+-(void) hideTools
+{
+    [[toolsView window] orderOut:self];
+    
 }
 
 @end

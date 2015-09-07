@@ -28,6 +28,8 @@ namespace mm {
     static const float MM_RENDER_ALPHA = 1.;
     static const float MM_RENDER_PREVIEW_ALPHA = .75;
     
+    static const int MM_TUTORIAL_TOOLSLIDE = 2;
+    
     // App Mode
     enum Mode {
         MODE_WELCOME = 0,

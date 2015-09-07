@@ -1,4 +1,5 @@
 #import "MainView.h"
+#import "AppDelegate.h"
 
 @implementation MainView
 
@@ -24,12 +25,21 @@
     if([NSColorPanel sharedColorPanelExists] && [[NSColorPanel sharedColorPanel] isVisible]){
         [[NSColorPanel sharedColorPanel] setLevel:NSMainMenuWindowLevel + 2];
     }
+    
+    // another sort-of hack to decide if we need to show the toolz
+    if ( manager->getShowTools() ){
+        [delegate showTools];
+    }
 }
 
 //--------------------------------------------------------------
 - (void)draw
 {
+    ofEnableSmoothing();
+    glEnable(GL_MULTISAMPLE);
     manager->draw();
+    glDisable(GL_MULTISAMPLE);
+    ofDisableSmoothing();
 }
 
 //--------------------------------------------------------------
@@ -127,6 +137,16 @@
 - (void) reload
 {
     manager->reload();
+}
+
+//--------------------------------------------------------------
+- (void) setAppDelegate:(id) d
+{
+    delegate = d;
+    
+    if ( mm::Settings::get().bDidWelcome ){
+        [delegate showTools];
+    }
 }
 
 

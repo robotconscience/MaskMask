@@ -17,6 +17,7 @@ namespace mm {
         currentMode = MODE_ADD; // todo: should be tied to a "first time" setting
         bNeedToResize = false;
         bAddCursor = false;
+        bNeedToShowTools = false;
         currentShape = nullptr;
         externalMouseEventsActive = false;
         maxAlpha = 0.;
@@ -61,7 +62,10 @@ namespace mm {
         
         // build tutorial
         bool doTutorial = tutorialMgr.setup();
-        if (doTutorial) currentMode = MODE_WELCOME;
+        if (doTutorial){
+            currentMode = MODE_WELCOME;
+            ofAddListener(tutorialMgr.onShowTools, this, &Manager::showTools);
+        }
         
         // load settings
         onReload();
@@ -251,6 +255,7 @@ namespace mm {
     void Manager::mousePressed( ofMouseEventArgs & e ){
         switch (currentMode) {
             case MODE_WELCOME:
+                tutorialMgr.next();
                 break;
             case MODE_ADD:
                 if ( currentShape != nullptr ){
@@ -522,6 +527,19 @@ namespace mm {
         setMode(m);
     }
     
+    
+    //--------------------------------------------------------------
+    void Manager::showTools(){
+        bNeedToShowTools = true;
+    }
+    
+    //--------------------------------------------------------------
+    bool Manager::getShowTools(){
+        bool ret = bNeedToShowTools;
+        bNeedToShowTools = false; // turn it off
+        return ret;
+    }
+    
     //--------------------------------------------------------------
     // Mode methods
     //--------------------------------------------------------------
@@ -607,7 +625,6 @@ namespace mm {
                 break;
         }
     }
-    
     
     //--------------------------------------------------------------
     // UTILS

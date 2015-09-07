@@ -23,8 +23,12 @@ namespace mm {
             ofScale(1,-1);
             ofTranslate(-ofGetWidth()/2.0, -ofGetHeight()/2.0);
             ofPushStyle();
+            
             float scale = fmax(ofGetWidth() / 1920., ofGetHeight()/1080.);
+            
+            ofTranslate(ofGetWidth()/2.0, ofGetHeight()/2.0);
             ofScale(scale,scale);
+            ofTranslate(-1920./2., -1080./2.);
             ofSetColor(255,alpha);
             svg.draw();
             ofPopStyle();
@@ -42,6 +46,7 @@ namespace mm {
     public:
         
         bool setup( string directory="tutorial"){
+            bAdvance = false;
             // first, check for settings: do we need to do this?
             bActive = !Settings::get().bDidWelcome;
             
@@ -68,7 +73,7 @@ namespace mm {
         
         bool draw(){
             if ( active()){
-                // first, time
+                // first, timeout
                 uint64_t time = ofGetElapsedTimeMillis();
                 int     rate  = Settings::get().welcomeMillis;
                 
@@ -76,7 +81,8 @@ namespace mm {
                 
                 screens[activeScreen].draw();
                 
-                if ( time - lastChanged > rate ){
+                if ( time - lastChanged > rate || bAdvance ){
+                    bAdvance = false;
                     lastChanged = time;
                     activeScreen++;
                     if ( activeScreen >= screens.size()){
@@ -85,6 +91,8 @@ namespace mm {
                         Settings::get().bDidWelcome = true;
                         Settings::get().save();
                         return false;
+                    } else if ( activeScreen == MM_TUTORIAL_TOOLSLIDE ){
+                        ofNotifyEvent(onShowTools, this);
                     }
                 }
             }
@@ -93,9 +101,15 @@ namespace mm {
         
         vector<TutorialScreen> screens;
         
+        void next(){
+            bAdvance = true;
+        }
+        
+        ofEvent<void> onShowTools;
+        
     protected:
         
-        bool bActive;
+        bool bActive, bAdvance;
         int activeScreen;
         
         // timing

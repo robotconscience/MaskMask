@@ -7,6 +7,7 @@
 
 @interface MainView : ofxCocoaGLView {
     mm::Manager * manager;
+    id delegate;
 }
 
 - (void)setup;
@@ -29,5 +30,7 @@
 - (void) saveAs;
 - (void) load;
 - (void) reload;
+
+- (void) setAppDelegate:(id) delegate;
 
 @end

@@ -317,10 +317,11 @@
 							<string key="NSFrameSize">{17, 10}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 								<object class="NSMutableData" key="NSPixelAttributes">
-									<bytes key="NS.bytes">AAAABQAAAEkAAAA7AAAAOAAAABAAAAA3AAAAAQAAAAA</bytes>
+									<bytes key="NS.bytes">AAAABQAAAEkAAAA7AAAABwAAAAEAAAA4AAAABAAAADcAAAABAAAAAA</bytes>
 								</object>
 							</object>
 						</object>
@@ -332,7 +333,7 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 877}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
-				<int key="NSWindowCollectionBehavior">129</int>
+				<int key="NSWindowCollectionBehavior">128</int>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="976324537">
@@ -344,7 +345,7 @@
 			<object class="NSWindowTemplate" id="145233056">
 				<int key="NSWindowStyleMask">5</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{161, 381}, {183, 304}}</string>
+				<string key="NSWindowRect">{{100, 300}, {183, 304}}</string>
 				<int key="NSWTFlags">-461896704</int>
 				<string key="NSWindowTitle">Tools</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -520,7 +521,7 @@
 									<int key="NSAuxButtonType">6</int>
 								</object>
 							</array>
-							<string key="NSCellSize">{101, 20}</string>
+							<string key="NSCellSize">{161, 27}</string>
 							<string key="NSIntercellSpacing">{4, 2}</string>
 							<int key="NSMatrixFlags">1151868928</int>
 							<string key="NSCellClass">NSActionCell</string>
@@ -595,6 +596,7 @@
 							<string key="NSFrame">{{11, 48}, {161, 23}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1609</string>
 							<bool key="NSEnabled">YES</bool>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -982,11 +984,6 @@
 						<reference key="parent" ref="145233056"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">536</int>
-						<reference key="object" ref="712021889"/>
-						<reference key="parent" ref="439893737"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">587</int>
 						<reference key="object" ref="196339953"/>
 						<array class="NSMutableArray" key="children">
@@ -1114,6 +1111,11 @@
 						<reference key="object" ref="898283323"/>
 						<reference key="parent" ref="407633498"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">536</int>
+						<reference key="object" ref="712021889"/>
+						<reference key="parent" ref="439893737"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1156,7 +1158,7 @@
 				<boolean value="NO" key="575.IBNSWindowAutoPositionCentersVertical"/>
 				<string key="575.IBPersistedLastKnownCanvasPosition">{-2698.5, -251}</string>
 				<string key="575.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<boolean value="YES" key="575.NSWindowTemplate.visibleAtLaunch"/>
+				<boolean value="NO" key="575.NSWindowTemplate.visibleAtLaunch"/>
 				<string key="576.CustomClassName">ToolsView</string>
 				<reference key="576.IBNSViewMetadataGestureRecognizers" ref="0"/>
 				<string key="576.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
