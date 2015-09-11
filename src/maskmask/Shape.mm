@@ -80,6 +80,30 @@ namespace mm {
                         path.lineTo(p);
                     }
                 }
+                
+//                ofPath segment;
+//                
+//                if ( p.bUseBezier && prev != nullptr ){// n != nullptr && n->bUseBezier ){
+//                    segment.quadBezierTo(*prev, p.bezierB, p);
+//                } else if ( prev != nullptr && prev->bUseBezier ){
+//                    segment.quadBezierTo(*prev, prev->bezierA, p);
+//                    
+//                } else {
+//                    segment.lineTo(p);
+//                }
+//                
+//                if ( next != nullptr ){
+//                    if ( next->bUseBezier  ){// n != nullptr && n->bUseBezier ){
+//                        segment.quadBezierTo(p, next->bezierB, *next);
+//                    } else if ( p.bUseBezier ){
+//                        segment.quadBezierTo(p, p.bezierA, *next);
+//                        
+//                    } else {
+//                        segment.lineTo(*next);
+//                    }
+//                }
+//                
+//                segment.draw();
             }
             
             // draw "next" preview
@@ -263,11 +287,9 @@ namespace mm {
                         p.bezierA.set(pointToAdd);
                         p.bezierB.set(pointToAdd);
                         
-//                        nearestIndex = getLineSegment(pointToAdd)[0];   
+                        nearestIndex = getInsertIndex(pointToAdd);
                         
                         points.insert(points.begin() + nearestIndex + 1, p);
-                        
-                        cout << "INSERT AFTER "<<nearestIndex<<endl;
                         
                         bChanged = true;
                         bFound = true;
@@ -345,11 +367,12 @@ namespace mm {
         }
         if ( !bFound ) selected = NULL;
         if ( mode == MODE_EDIT &&  path.getOutline().size() > 0 ){
-            auto & poly = path.getOutline()[0];
+            auto poly = path.getOutline()[0];
+            poly.close();
             
             pointToAdd.set( poly.getClosestPoint(e, &nearestIndex) );
 //            cout << "1:"<<nearestIndex << endl;
-            nearestIndex = getInsertIndex( pointToAdd );
+//            nearestIndex = getInsertIndex( pointToAdd );
 //            cout << "2:"<<nearestIndex << endl;
         }
     }
@@ -361,37 +384,77 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    int Shape::getInsertIndex( const ofVec2f & p ){
-        float dist = FLT_MAX;
-        int closest = -1;
+    int Shape::getInsertIndex( const ofVec2f & target ){
         
-        int index = 0;
-        for ( auto & v : points ){
-            float nd = v.distance(p);
-            if ( nd < dist ){
-                closest = index;
-                dist = nd;
+        auto & poly = path.getOutline()[0];
+        int ret = 0;
+        
+        int cur_closest = 0;
+        
+        for ( size_t i=0; i<points.size(); i++){
+            ofPath segment;
+            
+            auto & p = points[i];
+            Point * prev = nullptr;
+            Point * next = nullptr;
+            
+            segment.moveTo(p);
+            
+            if ( i != 0 ){
+                prev = &points[i-1];
+            } else if ( points.size() > 1 ){
+                prev = &points[ points.size() - 1 ];
             }
-            index++;
+            if ( i +1 < points.size() ){
+                next = &points[i+1];
+            } else if ( points.size() > 1 ){
+                next = &points[0];
+            }
+            
+            if ( p.bUseBezier && prev != nullptr ){// n != nullptr && n->bUseBezier ){
+                segment.quadBezierTo(*prev, p.bezierB, p);
+//            } else if ( prev != nullptr && prev->bUseBezier ){
+//                segment.quadBezierTo(*prev, prev->bezierA, p);
+                
+            } else {
+                segment.lineTo(p);
+            }
+            
+            if ( next != nullptr ){
+                if ( next->bUseBezier  ){// n != nullptr && n->bUseBezier ){
+                    segment.quadBezierTo(p, next->bezierB, *next);
+                } else if ( p.bUseBezier ){
+                    segment.quadBezierTo(p, p.bezierA, *next);
+                    
+                } else {
+                    segment.lineTo(*next);
+                }
+            }
+            
+            if ( i == points.size() -1 ){
+                auto & p = points[0];
+                auto & e = points[points.size()-1];
+                if ( p.bUseBezier ){
+                    segment.quadBezierTo(e, p.bezierA, p);
+                } else if ( e.bUseBezier ){
+                    segment.quadBezierTo(e, e.bezierA, p);
+                } else {
+                    //                    path.lineTo(p);
+                }
+            }
+            
+            auto poly = segment.getOutline()[0];
+            unsigned int whichClosest = 0;
+            auto closestP = poly.getClosestPoint(target, &whichClosest);
+            
+            cout << i <<":"<< abs(closestP.distance(target)) << endl;
+            
+            if ( abs(closestP.distance(target)) > 0.001  ){
+            } else {
+                ret = i;
+                return ret;
+            }
         }
-        
-        int next = closest + 1 < points.size() ? closest + 1 : 0;
-        int prev = closest -1 >= 0 ? closest - 1 : points.size()-1;
-        
-        ofVec2f cP = points[closest];
-        ofVec2f nP = points[next];
-        ofVec2f pP = points[prev];
-        
-        // closest = nearest point
-        // are we bettwen closest and next or closest and prev?
-        
-        int ret = closest;
-        
-        cout<<ofSign(p.x - cP.x)<<":"<<ofSign(p.x - nP.x)<<":"<<ofSign(p.x - pP.x)<<endl;
-        cout<<ofSign(p.y - cP.y)<<":"<<ofSign(p.y - nP.y)<<":"<<ofSign(p.x - pP.x)<<endl;
-        
-//        cout << dC <<":"<<dP<<":"<<dN<<endl;
-        
         
         return ret;
     }

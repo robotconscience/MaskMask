@@ -308,7 +308,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSOpenGLView" id="712021889">
@@ -316,7 +316,6 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrameSize">{17, 10}</string>
 							<reference key="NSSuperview" ref="439893737"/>
-							<reference key="NSWindow"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 								<object class="NSMutableData" key="NSPixelAttributes">
@@ -326,8 +325,6 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{10, 10}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="712021889"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 877}}</string>
@@ -368,7 +365,7 @@
 								<int key="NSCellFlags">68157504</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents">Mode</string>
-								<object class="NSFont" key="NSSupport" id="331487533">
+								<object class="NSFont" key="NSSupport" id="1012107472">
 									<string key="NSName">AnonymousPro-Bold</string>
 									<double key="NSSize">14</double>
 									<int key="NSfFlags">16</int>
@@ -434,7 +431,7 @@
 						<object class="NSMatrix" id="196339953">
 							<reference key="NSNextResponder" ref="878949604"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{11, 118}, {161, 143}}</string>
+							<string key="NSFrame">{{11, 120}, {161, 143}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="485213795"/>
@@ -448,7 +445,7 @@
 									<int key="NSCellFlags">-2080374784</int>
 									<int key="NSCellFlags2">0</int>
 									<string key="NSContents">Add shape</string>
-									<object class="NSFont" key="NSSupport" id="870832168">
+									<object class="NSFont" key="NSSupport" id="294819423">
 										<string key="NSName">AnonymousPro</string>
 										<double key="NSSize">13</double>
 										<int key="NSfFlags">16</int>
@@ -467,7 +464,7 @@
 									<int key="NSCellFlags">67108864</int>
 									<int key="NSCellFlags2">0</int>
 									<string key="NSContents">Edit shapes</string>
-									<reference key="NSSupport" ref="870832168"/>
+									<reference key="NSSupport" ref="294819423"/>
 									<reference key="NSControlView" ref="196339953"/>
 									<int key="NSTag">5</int>
 									<int key="NSButtonFlags">918306816</int>
@@ -481,7 +478,7 @@
 									<int key="NSCellFlags">67108864</int>
 									<int key="NSCellFlags2">0</int>
 									<string key="NSContents">Delete</string>
-									<reference key="NSSupport" ref="870832168"/>
+									<reference key="NSSupport" ref="294819423"/>
 									<reference key="NSControlView" ref="196339953"/>
 									<int key="NSTag">4</int>
 									<int key="NSButtonFlags">918306816</int>
@@ -495,7 +492,7 @@
 									<int key="NSCellFlags">67108864</int>
 									<int key="NSCellFlags2">0</int>
 									<string key="NSContents">Render</string>
-									<reference key="NSSupport" ref="870832168"/>
+									<reference key="NSSupport" ref="294819423"/>
 									<reference key="NSControlView" ref="196339953"/>
 									<int key="NSTag">2</int>
 									<int key="NSButtonFlags">918306816</int>
@@ -509,7 +506,7 @@
 									<int key="NSCellFlags">67108864</int>
 									<int key="NSCellFlags2">0</int>
 									<string key="NSContents">Preview</string>
-									<reference key="NSSupport" ref="870832168"/>
+									<reference key="NSSupport" ref="294819423"/>
 									<reference key="NSControlView" ref="196339953"/>
 									<int key="NSTag">1</int>
 									<int key="NSButtonFlags">918306816</int>
@@ -528,7 +525,7 @@
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">0</int>
 								<string key="NSContents">Radio</string>
-								<reference key="NSSupport" ref="870832168"/>
+								<reference key="NSSupport" ref="294819423"/>
 								<int key="NSButtonFlags">113000448</int>
 								<int key="NSButtonFlags2">6</int>
 								<string key="NSAlternateContents"/>
@@ -577,7 +574,7 @@
 								<int key="NSCellFlags">68157504</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents">Debug Color</string>
-								<reference key="NSSupport" ref="331487533"/>
+								<reference key="NSSupport" ref="1012107472"/>
 								<string key="NSCellIdentifier">_NS:526</string>
 								<reference key="NSControlView" ref="135577318"/>
 								<reference key="NSBackgroundColor" ref="583282357"/>
@@ -595,6 +592,7 @@
 							<string key="NSFrame">{{11, 48}, {161, 23}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1609</string>
 							<bool key="NSEnabled">YES</bool>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -974,10 +972,10 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="613250697"/>
 							<reference ref="902600871"/>
-							<reference ref="196339953"/>
 							<reference ref="485213795"/>
 							<reference ref="135577318"/>
 							<reference ref="34901587"/>
+							<reference ref="196339953"/>
 						</array>
 						<reference key="parent" ref="145233056"/>
 					</object>

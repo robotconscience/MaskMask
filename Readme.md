@@ -19,4 +19,3 @@ Mask Mask is a tool for prototyping with projection. It is a Mac-only app that a
   * cd into openFrameworks/addons
   * Clone [ofxCocoaGLView](https://github.com/robotconscience/ofxCocoaGLView)
   * Clone this repo into apps/myApps (or a similar level)
-  * You will not have any of the fonts! <-- I'm figuring this out, and may in the end just use a system font. Stay tuned.
