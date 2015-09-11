@@ -80,30 +80,6 @@ namespace mm {
                         path.lineTo(p);
                     }
                 }
-                
-//                ofPath segment;
-//                
-//                if ( p.bUseBezier && prev != nullptr ){// n != nullptr && n->bUseBezier ){
-//                    segment.quadBezierTo(*prev, p.bezierB, p);
-//                } else if ( prev != nullptr && prev->bUseBezier ){
-//                    segment.quadBezierTo(*prev, prev->bezierA, p);
-//                    
-//                } else {
-//                    segment.lineTo(p);
-//                }
-//                
-//                if ( next != nullptr ){
-//                    if ( next->bUseBezier  ){// n != nullptr && n->bUseBezier ){
-//                        segment.quadBezierTo(p, next->bezierB, *next);
-//                    } else if ( p.bUseBezier ){
-//                        segment.quadBezierTo(p, p.bezierA, *next);
-//                        
-//                    } else {
-//                        segment.lineTo(*next);
-//                    }
-//                }
-//                
-//                segment.draw();
             }
             
             // draw "next" preview
@@ -193,6 +169,13 @@ namespace mm {
         bChanged = true;
     }
     
+    
+    //--------------------------------------------------------------
+    Point * Shape::getSelected() const
+    {
+        return selected;
+    }
+    
     //--------------------------------------------------------------
     void Shape::deleteSelected(){
         if ( selected != NULL ){
@@ -276,11 +259,12 @@ namespace mm {
                     selected->mode = EDIT_BEZIER_B;
                 }
             }
+            
             if ( !bFound ){
                 selected = nullptr;
 //                selectedComp =  nullptr;
                 // first, are we adding new point?
-                if ( mode == MODE_EDIT  ){
+                if ( mode >= MODE_ADD  ){
                     if ( pointToAdd.distance(e) < SHAPE_SQUARE_SIZE ){
                         Point p;
                         p.set(pointToAdd);
@@ -297,7 +281,7 @@ namespace mm {
                 }
                 
                 // nah? OK are we trying to drag?
-                if ( !bFound && path.getOutline().size() > 0 ){
+                if ( !bFound && path.getOutline().size() > 0 && mode > MODE_ADD ){
                     if ( path.getOutline()[0].inside(e.x,e.y) ){
                         bShapeSelected = true;
                         pointPressed.set(e.x,e.y);
@@ -446,8 +430,6 @@ namespace mm {
             auto poly = segment.getOutline()[0];
             unsigned int whichClosest = 0;
             auto closestP = poly.getClosestPoint(target, &whichClosest);
-            
-            cout << i <<":"<< abs(closestP.distance(target)) << endl;
             
             if ( abs(closestP.distance(target)) > 0.001  ){
             } else {

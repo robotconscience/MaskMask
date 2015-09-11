@@ -262,20 +262,22 @@ namespace mm {
                     unique_lock<mutex> lock(mux);
                     
                     if ( currentShape != nullptr ){
-                        currentShape->addVertex(e);
+                        bool bFound = false;
+                        if ( currentShape->mousePressed(e, currentMode) ){
+                            bFound = true;
+                        }
+                        
+                        if ( !bFound ) currentShape->addVertex(e);
+                        else {
+                            auto * p = currentShape->getSelected();
+                            if ( p == &currentShape->getPoints()[0] ){
+                                setMode(MODE_EDIT);
+                            }
+                        }
                     }
                 } else {
                     // OPEN QUESTION: where do we allow dragging??
                     bool bFound = false;
-//                    if ( shapes.size() > 0 ){
-//                        for ( auto & it : shapes ){
-//                            if ( it.second->mousePressed(e, currentMode) ){
-//                                currentShape = it.second;
-//                                bFound = true;
-//                                break;
-//                            }
-//                        }
-//                    }
                     if ( !bFound ){
                         currentShape = shapes[createShape()];
                         currentShape->addVertex(e);

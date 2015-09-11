@@ -79,6 +79,7 @@ namespace mm {
         void addVertex(const ofVec2f & p );
         void removeLastVertex();
         void setNextPoint( const ofVec2f & p);
+        Point * getSelected() const;
         void deleteSelected();
         void close();
         
