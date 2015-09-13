@@ -522,7 +522,15 @@ namespace mm {
         // all new modes: finish shape if there is one
         
         if ( currentShape != nullptr ){
-            currentShape->close();
+            bool bCloseable = currentShape->close();
+            if ( !bCloseable ){
+                for ( auto & it : shapes ){
+                    if ( it.second == currentShape ){
+                        shapes.erase(it.first);
+                        break;
+                    }
+                }
+            }
             currentShape = nullptr;
         }
         

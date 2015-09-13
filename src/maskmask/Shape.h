@@ -81,7 +81,7 @@ namespace mm {
         void setNextPoint( const ofVec2f & p);
         Point * getSelected() const;
         void deleteSelected();
-        void close();
+        bool close(); // returns true if > 2 points
         
         bool mousePressed( ofMouseEventArgs & e, mm::Mode mode = MODE_RENDER );
         void mouseDragged( ofMouseEventArgs & e, mm::Mode mode = MODE_RENDER );

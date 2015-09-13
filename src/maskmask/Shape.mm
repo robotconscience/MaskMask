@@ -202,8 +202,13 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
-    void Shape::close(){
-        path.close();
+    bool Shape::close(){
+        if ( points.size() > 2 ){
+            path.close();
+            return true;
+        } else {
+            return false;
+        }
     }
     
     //--------------------------------------------------------------
