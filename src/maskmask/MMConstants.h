@@ -9,6 +9,8 @@
 #pragma once
 
 #include <Cocoa/Cocoa.h>
+#include <QuartzCore/QuartzCore.h>
+#include "ofxCocoaUtils.h"
 
 namespace mm {
     static const int SHAPE_SQUARE_SIZE = 10;
@@ -56,9 +58,6 @@ namespace mm {
                 return "";
         }
     }
-    
-    // cursors
-    static NSCursor * cursorStandard, *cursorAdd, *cursorEditA, *cursorEditD, *cursorDel;
     
     // phontz
     class FontManager {
@@ -139,6 +138,95 @@ namespace mm {
         // We can use the better technique of deleting the methods
         // we don't want.
         Settings(Settings const&)               = delete;
+        void operator=(Settings const&)  = delete;
+    };
+    
+    enum CursorType {
+        CURSOR_STANDARD = 0,
+        CURSOR_ADD,
+        CURSOR_EDIT,
+        CURSOR_DELETE
+    };
+    
+    // Cursor Mgr
+    class CursorManager {
+    public:
+        
+        static CursorManager& get()
+        {
+            static CursorManager inst; // Guaranteed to be destroyed.
+            static bool bInstance = false;
+            
+            if ( !bInstance ){
+                bInstance = true;
+                
+                // build cursor images
+                @autoreleasepool {
+                    inst.addImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_add.pdf").c_str()]];
+                    inst.delImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_delete.pdf").c_str()]];
+                    inst.editImageA = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_edit.pdf").c_str()]];
+                    
+                    inst.cursorStandard = [NSCursor arrowCursor];
+                    inst.cursorAdd = [[NSCursor alloc] initWithImage:inst.addImage hotSpot:NSMakePoint(11,11) ];
+                    inst.cursorEdit = [[NSCursor alloc] initWithImage:inst.editImageA hotSpot:NSMakePoint(11,11) ];
+                    inst.cursorDel = [[NSCursor alloc] initWithImage:inst.delImage hotSpot:NSMakePoint(11,11) ];
+                }
+            }
+            
+            return inst;
+        }
+        
+        void setCursor( NSView * view, CursorType type ){
+            switch (type){
+                case CURSOR_STANDARD:
+                    [view addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
+                    [cursorStandard set];
+                    break;
+                    
+                case CURSOR_ADD:
+                    [view addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
+                    [cursorAdd set];
+                    break;
+                case CURSOR_EDIT:
+                    [view addCursorRect:rc::rectForAllScreens() cursor:cursorEdit];
+                    [cursorEdit set];
+                    break;
+                case CURSOR_DELETE:
+                    [view addCursorRect:rc::rectForAllScreens() cursor:cursorDel];
+                    [cursorDel set];
+                    break;
+            }
+        }
+        
+    protected:
+        // cursors
+        NSCursor * cursorStandard, *cursorAdd, *cursorEdit, *cursorDel;
+        
+        // images
+        NSImage *addImage, *delImage, *editImageA, *editImageB;
+
+        // saving this for later!
+        NSImage * changeCursorColor( NSImage* img, float hue )
+        {
+            CIImage *inputImage = [[CIImage alloc] initWithData:[img TIFFRepresentation]];
+            
+            CIFilter *hueAdjust = [CIFilter filterWithName:@"CIHueAdjust"];
+            [hueAdjust setValue: inputImage forKey: @"inputImage"];
+            [hueAdjust setValue: [NSNumber numberWithFloat: hue]
+                         forKey: @"inputAngle"];
+            CIImage *outputImage = [hueAdjust valueForKey: @"outputImage"];
+            
+            NSImage *resultImage = [[NSImage alloc] initWithSize:[outputImage extent].size];
+            NSCIImageRep *rep = [NSCIImageRep imageRepWithCIImage:outputImage];
+            [resultImage addRepresentation:rep];
+            
+            return resultImage;
+            
+        }
+        
+    private:
+        CursorManager(){};
+        CursorManager(Settings const&)               = delete;
         void operator=(Settings const&)  = delete;
     };
 }

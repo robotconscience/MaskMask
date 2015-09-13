@@ -45,21 +45,6 @@ namespace mm {
         ofAddListener(statusMenu.onReload, this, &Manager::onReload);
         ofAddListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
-        // build cursor images
-        @autoreleasepool {
-            NSImage *addImage, *delImage, *editImageA, *editImageB;
-            addImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_add.pdf").c_str()]];
-            delImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_delete.pdf").c_str()]];
-            editImageA = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_edit.pdf").c_str()]];
-            editImageB = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_edit_m.pdf").c_str()]];
-            
-            cursorStandard = [NSCursor arrowCursor];
-            cursorAdd = [[NSCursor alloc] initWithImage:addImage hotSpot:NSMakePoint(0,0) ];
-            cursorEditA = [[NSCursor alloc] initWithImage:editImageA hotSpot:NSMakePoint(0,0) ];
-            cursorEditD = [[NSCursor alloc] initWithImage:editImageB hotSpot:NSMakePoint(0,0) ];
-            cursorDel = [[NSCursor alloc] initWithImage:delImage hotSpot:NSMakePoint(0,0) ];
-        }
-        
         // build tutorial
         bool doTutorial = tutorialMgr.setup();
         if (doTutorial){
@@ -555,8 +540,7 @@ namespace mm {
             case MODE_WELCOME:
                 setExternalMouse(false);
                 [window setIgnoresMouseEvents:NO];
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
-                [cursorEditA set];
+                CursorManager::get().setCursor(glView, CURSOR_STANDARD);
                 [window setLevel:NSFloatingWindowLevel];
                 break;
             case MODE_EDIT:
@@ -567,16 +551,15 @@ namespace mm {
                 
                 setExternalMouse(false);
                 [window setIgnoresMouseEvents:NO];
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
-                [cursorEditA set];
+                CursorManager::get().setCursor(glView, CURSOR_EDIT);
                 [window setLevel:NSFloatingWindowLevel];
                 break;
                 
             case MODE_ADD:
                 setExternalMouse(false);
                 [window setIgnoresMouseEvents:NO];
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
-                [cursorAdd set];
+                
+                CursorManager::get().setCursor(glView, CURSOR_ADD);
                 [window setLevel:NSFloatingWindowLevel];
                 break;
                 
@@ -585,8 +568,7 @@ namespace mm {
                 [window setIgnoresMouseEvents:YES];
                 setExternalMouse(true);
                 
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
-                [cursorStandard set];
+                CursorManager::get().setCursor(glView, CURSOR_STANDARD);
                 [window setLevel:NSScreenSaverWindowLevel];
                 break;
             
@@ -594,36 +576,8 @@ namespace mm {
                 currentShape = nullptr;
                 [window setIgnoresMouseEvents:NO];
                 
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
-                [cursorStandard set];
+                CursorManager::get().setCursor(glView, CURSOR_STANDARD);
                 [window setLevel:NSFloatingWindowLevel];
-                break;
-        }
-        
-        // set cursor
-        switch (currentMode) {
-            case MODE_WELCOME:
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
-                [cursorStandard set];
-                break;
-            case MODE_EDIT:
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditA];
-                [cursorEditA set];
-                break;
-                
-            case MODE_EDIT_DEL:
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorEditD];
-                [cursorEditD set];
-                break;
-                
-            case MODE_ADD:
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorAdd];
-                [cursorAdd set];
-                break;
-                
-            case MODE_RENDER:
-                [glView addCursorRect:rc::rectForAllScreens() cursor:cursorStandard];
-                [cursorStandard set];
                 break;
         }
     }
