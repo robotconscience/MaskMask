@@ -7,6 +7,7 @@
     IBOutlet ofxCocoaGLView* mainView;
     IBOutlet ofxCocoaGLView* toolsView;
     IBOutlet NSColorWell * picker;
+    IBOutlet NSMatrix * modeRadio;
 }
 
 @property (assign) IBOutlet NSWindow *window;

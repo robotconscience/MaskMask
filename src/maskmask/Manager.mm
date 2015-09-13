@@ -66,7 +66,8 @@ namespace mm {
         ofAddListener(ofEvents().mouseReleased, this, &Manager::mouseReleased);
         ofAddListener(ofEvents().mouseMoved, this, &Manager::mouseMoved);
         
-        setMode(currentMode);
+        ofAddListener(mm::Events::get().modeChanged, this, &Manager::onChangeMode);
+        ofNotifyEvent( mm::Events::get().modeChanged, currentMode, this );
     }
     
     //--------------------------------------------------------------
@@ -110,7 +111,8 @@ namespace mm {
             case MODE_WELCOME:{
                 bool bKeepGoing = tutorialMgr.draw();
                 if ( !bKeepGoing ){
-                    setMode(MODE_ADD);
+                    Mode newMode = MODE_ADD;
+                    ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
                 }
             }
                 break;
@@ -225,7 +227,8 @@ namespace mm {
             case MODE_ADD:
             {
                 if ( e.key == OF_KEY_RETURN){
-                    setMode(MODE_EDIT);
+                    Mode newMode = MODE_EDIT;
+                    ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
                 }
             }
                 break;
@@ -256,7 +259,8 @@ namespace mm {
                         else {
                             auto * p = currentShape->getSelected();
                             if ( p == &currentShape->getPoints()[0] ){
-                                setMode(MODE_EDIT);
+                                Mode newMode = MODE_EDIT;
+                                ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
                             }
                         }
                     }
@@ -280,7 +284,8 @@ namespace mm {
             case MODE_RENDER_PREVIEW:
                 for ( auto & it : shapes ){
                     if ( it.second->inside( e, currentMode ) ){
-                        setMode(MODE_RENDER);
+                        Mode newMode = MODE_RENDER;
+                        ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
                         break;
                     }
                 }
@@ -483,33 +488,13 @@ namespace mm {
         if ( newMode > MODE_EDIT ){
             newMode = MODE_RENDER;
         }
-//
-//            [window setLevel:NSScreenSaverWindowLevel];
-////            rc::setWindowPosition( window, glView, ofPoint(0,0));
-////            
-////            for ( auto & s : shapes ){
-////                auto & p = s.second->getPoints();
-////                for (auto & v : p ){
-////                    v.y += 50;
-////                }
-////            }
-//        } else if ( newMode == MODE_ADD ){
-//            [window setLevel:NSFloatingWindowLevel];
-////            rc::setWindowPosition( window, glView, ofPoint(0,50));
-////            
-////            for ( auto & s : shapes ){
-////                auto & p = s.second->getPoints();
-////                for (auto & v : p ){
-////                    v.y -= 50;
-////                }
-////            }
-//        }
-        setMode(newMode);
+        ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
     }
     
     //--------------------------------------------------------------
     void Manager::onChangeMode( Mode & m ){
         setMode(m);
+        [glView onChangeMode:m];
     }
     
     

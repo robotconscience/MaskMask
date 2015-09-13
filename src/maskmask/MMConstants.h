@@ -148,7 +148,9 @@ namespace mm {
         CURSOR_DELETE
     };
     
-    // Cursor Mgr
+    /**
+     * @class CursorManager
+     */
     class CursorManager {
     public:
         
@@ -227,6 +229,32 @@ namespace mm {
     private:
         CursorManager(){};
         CursorManager(Settings const&)               = delete;
+        void operator=(Settings const&)  = delete;
+    };
+    
+    /**
+     * @class Events
+     */
+    class Events {
+    public:
+        
+        static Events& get()
+        {
+            static Events inst; // Guaranteed to be destroyed.
+            static bool bInstance = false;
+            
+            if ( !bInstance ){
+                bInstance = true;
+            }
+            
+            return inst;
+        }
+        
+        ofEvent<Mode> modeChanged;
+        
+    private:
+        Events(){};
+        Events(Settings const&)               = delete;
         void operator=(Settings const&)  = delete;
     };
 }

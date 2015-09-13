@@ -150,5 +150,17 @@
 }
 
 
+//--------------------------------------------------------------
+- (void) setModeRadio:(id) radio
+{
+    modeRadio = radio;
+}
+
+
+//--------------------------------------------------------------
+- (void) onChangeMode:(mm::Mode) newMode
+{
+    [modeRadio selectCellWithTag:(int) newMode];
+}
 
 @end

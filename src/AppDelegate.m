@@ -13,6 +13,7 @@
 {
     [[picker colorPanel] setLevel:NSMainMenuWindowLevel+1];
     [mainView setAppDelegate:self];
+    [mainView setModeRadio:modeRadio];
 }
 
 

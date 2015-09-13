@@ -8,6 +8,7 @@
 @interface MainView : ofxCocoaGLView {
     mm::Manager * manager;
     id delegate;
+    id modeRadio;
 }
 
 - (void)setup;
@@ -32,5 +33,8 @@
 - (void) reload;
 
 - (void) setAppDelegate:(id) delegate;
+- (void) setModeRadio:(id) radio;
+
+- (void) onChangeMode:(mm::Mode) newMode;
 
 @end

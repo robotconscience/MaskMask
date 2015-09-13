@@ -308,7 +308,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSOpenGLView" id="712021889">
@@ -316,6 +316,7 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrameSize">{17, 10}</string>
 							<reference key="NSSuperview" ref="439893737"/>
+							<reference key="NSWindow"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 								<object class="NSMutableData" key="NSPixelAttributes">
@@ -325,6 +326,8 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{10, 10}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="712021889"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 877}}</string>
@@ -592,7 +595,6 @@
 							<string key="NSFrame">{{11, 48}, {161, 23}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1609</string>
 							<bool key="NSEnabled">YES</bool>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -759,6 +761,14 @@
 						<reference key="destination" ref="898283323"/>
 					</object>
 					<int key="connectionID">659</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">modeRadio</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="196339953"/>
+					</object>
+					<int key="connectionID">660</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1185,7 +1195,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">659</int>
+			<int key="maxID">660</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1233,6 +1243,7 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="mainView">ofxCocoaGLView</string>
+						<string key="modeRadio">NSMatrix</string>
 						<string key="picker">NSColorWell</string>
 						<string key="toolsView">ofxCocoaGLView</string>
 						<string key="window">NSWindow</string>
@@ -1241,6 +1252,10 @@
 						<object class="IBToOneOutletInfo" key="mainView">
 							<string key="name">mainView</string>
 							<string key="candidateClassName">ofxCocoaGLView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="modeRadio">
+							<string key="name">modeRadio</string>
+							<string key="candidateClassName">NSMatrix</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="picker">
 							<string key="name">picker</string>
