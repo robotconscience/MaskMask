@@ -574,7 +574,7 @@ namespace mm {
             
             case MODE_RENDER_PREVIEW:
                 currentShape = nullptr;
-                [window setIgnoresMouseEvents:NO];
+                //[window setIgnoresMouseEvents:NO];
                 
                 CursorManager::get().setCursor(glView, CURSOR_STANDARD);
                 [window setLevel:NSFloatingWindowLevel];
@@ -589,15 +589,33 @@ namespace mm {
     void Manager::mouseDownOutside( NSEvent * theEvent) {
         ofMouseEventArgs args;
         ofPoint p = rc::ofPointFromOutsideEvent(glView, theEvent);
-        bool bGood = true;
-        for ( auto & it : shapes ){
-            if ( it.second->inside( p, currentMode ) ){
-                bGood = false;
+        
+        switch (currentMode) {
+            case MODE_RENDER_PREVIEW:
+                for ( auto & it : shapes ){
+                    if ( it.second->inside( p, currentMode ) ){
+                        setMode(MODE_RENDER);
+                        break;
+                    }
+                }
+                break;
+                
+            case MODE_RENDER:
+            {
+                bool bGood = true;
+                for ( auto & it : shapes ){
+                    if ( it.second->inside( p, currentMode ) ){
+                        bGood = false;
+                    }
+                }
+                if ( bGood ){
+                    setMode(MODE_RENDER_PREVIEW);
+                }
             }
+                break;
         }
-        if ( bGood ){
-            setMode(MODE_RENDER_PREVIEW);
-        }
+        
+        
     }
     
     void Manager::setExternalMouse( bool bOn ){
