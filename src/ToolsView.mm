@@ -7,6 +7,7 @@
     NSWindow * cocoaWindow = [self window];
     [cocoaWindow setLevel:NSMainMenuWindowLevel + 1];
     [self setTranslucent:YES];
+    [self enableMouseEvents:NO];
 }
 
 - (void)update
