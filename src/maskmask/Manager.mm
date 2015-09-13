@@ -261,12 +261,8 @@ namespace mm {
                         }
                     }
                 } else {
-                    // OPEN QUESTION: where do we allow dragging??
-                    bool bFound = false;
-                    if ( !bFound ){
-                        currentShape = shapes[createShape()];
-                        currentShape->addVertex(e);
-                    }
+                    currentShape = shapes[createShape()];
+                    currentShape->addVertex(e);
                 }
                 break;
                 
@@ -298,10 +294,12 @@ namespace mm {
             case MODE_WELCOME:
                 break;
             case MODE_ADD:
-                if ( shapes.size() > 0 ){
+                if ( shapes.size() > 0 && currentShape == nullptr ){
                     for ( auto & it : shapes ){
                         it.second->mouseDragged(e, currentMode);
                     }
+                } else {
+                    currentShape->mouseDragged(e, currentMode);
                 }
                 break;
                 
@@ -536,6 +534,13 @@ namespace mm {
     
         currentMode = newMode;
         
+        // all new modes: finish shape if there is one
+        
+        if ( currentShape != nullptr ){
+            currentShape->close();
+            currentShape = nullptr;
+        }
+        
         switch (newMode) {
             case MODE_WELCOME:
                 setExternalMouse(false);
@@ -544,10 +549,7 @@ namespace mm {
                 [window setLevel:NSFloatingWindowLevel];
                 break;
             case MODE_EDIT:
-                if ( currentShape != nullptr ){
-                    currentShape->close();
-                    currentShape = nullptr;
-                }
+            case MODE_EDIT_DEL:
                 
                 setExternalMouse(false);
                 [window setIgnoresMouseEvents:NO];
