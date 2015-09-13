@@ -31,6 +31,7 @@ namespace mm {
         ofRemoveListener(statusMenu.onToggleMode, this, &Manager::onMode);
         
         ofRemoveListener(ofEvents().keyPressed, this, &Manager::keyPressed);
+        ofRemoveListener(ofEvents().keyReleased, this, &Manager::keyReleased);
         ofRemoveListener(ofEvents().mousePressed, this, &Manager::mousePressed);
         ofRemoveListener(ofEvents().mouseDragged, this, &Manager::mouseDragged);
         ofRemoveListener(ofEvents().mouseReleased, this, &Manager::mouseReleased);
@@ -61,6 +62,7 @@ namespace mm {
         
         // get this show on the road
         ofAddListener(ofEvents().keyPressed, this, &Manager::keyPressed);
+        ofAddListener(ofEvents().keyReleased, this, &Manager::keyReleased);
         ofAddListener(ofEvents().mousePressed, this, &Manager::mousePressed);
         ofAddListener(ofEvents().mouseDragged, this, &Manager::mouseDragged);
         ofAddListener(ofEvents().mouseReleased, this, &Manager::mouseReleased);
@@ -220,6 +222,8 @@ namespace mm {
                             it.second->deleteSelected();
                         }
                     }
+                } else if ( e.key == MM_KEY_BEZIER ){
+                    CursorManager::get().setCursor(glView, CURSOR_BEZIER);
                 }
             }
                 break;
@@ -230,6 +234,32 @@ namespace mm {
                     Mode newMode = MODE_EDIT;
                     ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
                 }
+            }
+                break;
+                
+                
+            case MODE_RENDER:
+                break;
+        }
+    }
+    
+    void Manager::keyReleased( ofKeyEventArgs & e ){
+        
+        // mode stuff
+        switch (currentMode) {
+            case MODE_WELCOME:
+                break;
+            case MODE_EDIT:
+            {
+                if ( e.key == MM_KEY_BEZIER ){
+                    //TODO: BEZIER CURSOR
+                    CursorManager::get().setCursor(glView, CURSOR_EDIT);
+                }
+            }
+                break;
+                
+            case MODE_ADD:
+            {
             }
                 break;
                 

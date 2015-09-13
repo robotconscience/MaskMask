@@ -52,6 +52,7 @@ namespace mm {
         
     protected:
         void keyPressed( ofKeyEventArgs & e );
+        void keyReleased( ofKeyEventArgs & e );
         void mousePressed( ofMouseEventArgs & e );
         void mouseDragged( ofMouseEventArgs & e );
         void mouseReleased( ofMouseEventArgs & e );

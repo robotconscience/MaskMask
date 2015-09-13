@@ -8,6 +8,7 @@
     [cocoaWindow setLevel:NSMainMenuWindowLevel + 1];
     [self setTranslucent:YES];
     [self enableMouseEvents:NO];
+    [self enableWindowEvents:NO];
 }
 
 - (void)update
@@ -26,7 +27,6 @@
 
 - (void)keyPressed:(int)key
 {
-	
 }
 
 - (void)keyReleased:(int)key
@@ -58,7 +58,6 @@
 {
 	
 }
-
 
 - (void) changeMode:(int) whichMode
 {

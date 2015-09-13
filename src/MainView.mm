@@ -30,6 +30,7 @@
     if ( manager->getShowTools() ){
         [delegate showTools];
     }
+    [[self window] makeKeyAndOrderFront:nil];
 }
 
 //--------------------------------------------------------------
@@ -51,7 +52,7 @@
 //--------------------------------------------------------------
 - (void)keyPressed:(int)key
 {
-	
+    cout << key << endl;
 }
 
 //--------------------------------------------------------------
@@ -161,6 +162,12 @@
 - (void) onChangeMode:(mm::Mode) newMode
 {
     [modeRadio selectCellWithTag:(int) newMode];
+}
+
+//--------------------------------------------------------------
+- (BOOL) canBecomeKeyView
+{
+    return YES;
 }
 
 @end

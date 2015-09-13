@@ -55,6 +55,8 @@
 -(void) showTools
 {
     [[toolsView window] makeKeyAndOrderFront:nil];
+    [[mainView window] makeKeyAndOrderFront:nil];
+    
 }
 -(void) hideTools
 {

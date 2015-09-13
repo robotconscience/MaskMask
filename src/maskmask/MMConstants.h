@@ -25,7 +25,7 @@ namespace mm {
     static ofColor SHAPE_COLOR(255,0,0);
     static const ofColor SHAPE_COLOR_SELECTED(255,255,0,150);
     
-    static const char MM_KEY_BEZIER = 'z';
+    #define MM_KEY_BEZIER OF_KEY_ALT
     
     static const float MM_RENDER_ALPHA = 1.;
     static const float MM_RENDER_PREVIEW_ALPHA = .75;
@@ -145,7 +145,8 @@ namespace mm {
         CURSOR_STANDARD = 0,
         CURSOR_ADD,
         CURSOR_EDIT,
-        CURSOR_DELETE
+        CURSOR_DELETE,
+        CURSOR_BEZIER
     };
     
     /**
@@ -168,10 +169,16 @@ namespace mm {
                     inst.delImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_delete.pdf").c_str()]];
                     inst.editImageA = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_edit.pdf").c_str()]];
                     
+                    inst.bezierImage = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:ofToDataPath("cursors/cursor_bezier.pdf").c_str()]];
+                    
+                    
+                    NSPoint offset = NSMakePoint(11,11);
+                    
                     inst.cursorStandard = [NSCursor arrowCursor];
-                    inst.cursorAdd = [[NSCursor alloc] initWithImage:inst.addImage hotSpot:NSMakePoint(11,11) ];
-                    inst.cursorEdit = [[NSCursor alloc] initWithImage:inst.editImageA hotSpot:NSMakePoint(11,11) ];
-                    inst.cursorDel = [[NSCursor alloc] initWithImage:inst.delImage hotSpot:NSMakePoint(11,11) ];
+                    inst.cursorAdd = [[NSCursor alloc] initWithImage:inst.addImage hotSpot:offset ];
+                    inst.cursorEdit = [[NSCursor alloc] initWithImage:inst.editImageA hotSpot:offset ];
+                    inst.cursorDel = [[NSCursor alloc] initWithImage:inst.delImage hotSpot:offset ];
+                    inst.cursorBezier = [[NSCursor alloc] initWithImage:inst.bezierImage hotSpot:offset ];
                 }
             }
             
@@ -197,15 +204,19 @@ namespace mm {
                     [view addCursorRect:rc::rectForAllScreens() cursor:cursorDel];
                     [cursorDel set];
                     break;
+                case CURSOR_BEZIER:
+                    [view addCursorRect:rc::rectForAllScreens() cursor:cursorBezier];
+                    [cursorBezier set];
+                    break;
             }
         }
         
     protected:
         // cursors
-        NSCursor * cursorStandard, *cursorAdd, *cursorEdit, *cursorDel;
+        NSCursor * cursorStandard, *cursorAdd, *cursorEdit, *cursorDel, *cursorBezier;
         
         // images
-        NSImage *addImage, *delImage, *editImageA, *editImageB;
+        NSImage *addImage, *delImage, *editImageA, *editImageB, *bezierImage;
 
         // saving this for later!
         NSImage * changeCursorColor( NSImage* img, float hue )
