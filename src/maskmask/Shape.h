@@ -10,6 +10,7 @@
 
 #include "ofMain.h"
 #include "MMConstants.h"
+#include "ofxSvg.h"
 
 namespace mm {
     
@@ -99,6 +100,8 @@ namespace mm {
         vector<int> getLineSegment( const ofVec2f & p );
         
         void setFillColor( ofColor fill );
+        
+        void import( string svgFile );
         
     protected:
         Point * selected;

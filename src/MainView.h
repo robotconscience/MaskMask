@@ -31,6 +31,7 @@
 - (void) saveAs;
 - (void) load;
 - (void) reload;
+- (void) import;
 
 - (void) setAppDelegate:(id) delegate;
 - (void) setModeRadio:(id) radio;

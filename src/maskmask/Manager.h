@@ -46,6 +46,7 @@ namespace mm {
         void saveAs( string dest );
         void reload();
         void load( string settings );
+        void import( string svgFile );
         
         // getters
         bool getShowTools();
@@ -63,6 +64,7 @@ namespace mm {
         void onSave();
         void onReload();
         void onMode();
+        void onImport();
         void onChangeMode( Mode & m );
         
         StatusBar statusMenu;

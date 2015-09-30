@@ -162,8 +162,6 @@ namespace mm {
         for ( auto & it : shapes ){
             it.second->setFillColor(debugColor);
         }
-        
-        cout << debugColor << endl;
     }
     
     //--------------------------------------------------------------
@@ -252,7 +250,6 @@ namespace mm {
             case MODE_EDIT:
             {
                 if ( e.key == MM_KEY_BEZIER ){
-                    //TODO: BEZIER CURSOR
                     CursorManager::get().setCursor(glView, CURSOR_EDIT);
                 }
             }
@@ -515,10 +512,20 @@ namespace mm {
     //--------------------------------------------------------------
     void Manager::onMode(){
         Mode newMode = (Mode)(currentMode + 1);
-        if ( newMode > MODE_EDIT ){
+        
+        // special 'escape' mode
+        if ( currentMode == MODE_RENDER_PREVIEW ){
+            newMode = MODE_EDIT;
+        } else if ( newMode > MODE_EDIT ){
             newMode = MODE_RENDER;
         }
         ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
+    }
+    
+    //--------------------------------------------------------------
+    void Manager::import( string svgFile ){
+        auto & shape = shapes[createShape()];
+        shape->import( svgFile );
     }
     
     //--------------------------------------------------------------
@@ -526,7 +533,6 @@ namespace mm {
         setMode(m);
         [glView onChangeMode:m];
     }
-    
     
     //--------------------------------------------------------------
     void Manager::showTools(){

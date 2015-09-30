@@ -21,6 +21,7 @@
 -(IBAction) saveAs:(id) sender;
 -(IBAction) load:(id) sender;
 -(IBAction) reload:(id) sender;
+-(IBAction) import:(id) sender;
 
 -(void) showTools;
 -(void) hideTools;

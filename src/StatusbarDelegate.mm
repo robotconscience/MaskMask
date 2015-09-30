@@ -36,6 +36,12 @@
     if ( self.ofObjectRef != NULL ) self.ofObjectRef->reload();
 }
 
+- (void) importAction: (id)sender
+{
+    
+    if ( self.ofObjectRef != NULL ) self.ofObjectRef->import();
+}
+
 - (void) saveAction: (id)sender
 {
     
@@ -65,11 +71,13 @@
     // add items
     self.toggleMode = [self.StatusMenu addItemWithTitle:@"Toggle Mode" action:@selector(toggleAction:) keyEquivalent:@"M"];
     self.reload = [self.StatusMenu addItemWithTitle:@"Reload" action:@selector(reloadAction:) keyEquivalent:@"R"];
+    self.import = [self.StatusMenu addItemWithTitle:@"Import SVG" action:@selector(importAction:) keyEquivalent:@"I"];
     self.save = [self.StatusMenu addItemWithTitle:@"Save" action:@selector(saveAction:) keyEquivalent:@""];
     self.quit = [self.StatusMenu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
     
     // this is a product of me not knowing objective c?
     [self.toggleMode setTarget:self];
+    [self.import setTarget:self];
     [self.reload setTarget:self];
     [self.save setTarget:self];
     
@@ -108,4 +116,8 @@ void StatusBar::save(){
 
 void StatusBar::reload(){
     ofNotifyEvent(onReload, this);
+}
+
+void StatusBar::import(){
+    ofNotifyEvent(onImport, this);
 }

@@ -52,6 +52,12 @@
 }
 
 
+-(IBAction) import:(id) sender;
+{
+    [mainView import];
+}
+
+
 -(void) showTools
 {
     [[toolsView window] makeKeyAndOrderFront:nil];

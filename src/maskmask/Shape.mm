@@ -373,6 +373,37 @@ namespace mm {
     }
     
     //--------------------------------------------------------------
+    void Shape::import( string svgFile ){
+        ofxSVG toImport;
+        toImport.load(svgFile);
+        if ( toImport.getNumPath() != 0 ){
+            for ( auto & p : toImport.getPaths() ){
+                ofVec2f src;
+                for ( auto & c : p.getCommands() ){
+                    
+//                    cout << c.to << endl;
+//                    cout << c.type << endl;
+                    
+                    if ( c.type == ofPath::Command::close ){
+//                    } else if ( c.type == ofPath::Command::moveTo ){
+//                        src.set(c.to);
+                    } else {
+                        points.push_back(Point());
+                        points.back().set( c.to );
+                        points.back().bezierA.set( c.cp1 );
+                        points.back().bezierB.set( c.cp2 );
+                        points.back().bUseBezier = c.type == ofPath::Command::bezierTo;
+                    }
+                }
+                
+                bChanged = true;
+            }
+        } else {
+            ofLogError()<<"[MaskMask] SVG import failed :(";
+        }
+    }
+    
+    //--------------------------------------------------------------
     int Shape::getInsertIndex( const ofVec2f & target ){
         
         auto & poly = path.getOutline()[0];

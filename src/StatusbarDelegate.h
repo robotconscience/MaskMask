@@ -26,6 +26,7 @@ class StatusBar;
 
 @property (nonatomic, retain) NSMenu *StatusMenu;
 @property (nonatomic, retain) NSMenuItem *reload;
+@property (nonatomic, retain) NSMenuItem *import;
 @property (nonatomic, retain) NSMenuItem *save;
 @property (nonatomic, retain) NSMenuItem *quit;
 @property (nonatomic, retain) NSMenuItem *toggleMode;
@@ -34,6 +35,7 @@ class StatusBar;
 
 - (void) reloadAction: (id)sender;
 - (void) saveAction: (id)sender;
+- (void) importAction: (id)sender;
 - (void) toggleAction: (id)sender;
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem;
 //- (void) quitAction: (id)sender;
@@ -46,11 +48,12 @@ public:
     
     void setup();
     
-    ofEvent<void> onReload, onSave, onToggleMode;
+    ofEvent<void> onReload, onSave, onToggleMode, onImport;
     
     void toggleMode();
     void save();
     void reload();
+    void import();
     
 private:
     
