@@ -95,14 +95,14 @@ namespace mm {
             if ( !bInstance ){
                 // these should be inside 'Resources'
                 ofXml settings;
-                settings.load(ofToDataPath( "settings.xml" ));
-                
-                settings.setTo("settings");
-                inst.settingsFile = settings.getValue("settingsFile");
-                settings.setTo("welcome");
-                inst.bDidWelcome = settings.getBoolValue("didWelcome");
-                inst.welcomeMillis = settings.getIntValue("timing");
-                settings.setToParent();
+                if (settings.load(ofToDataPath( "settings.xml" ))){
+                    settings.setTo("settings");
+                    inst.settingsFile = settings.getValue("settingsFile");
+                    settings.setTo("welcome");
+                    inst.bDidWelcome = settings.getBoolValue("didWelcome");
+                    inst.welcomeMillis = settings.getIntValue("timing");
+                    settings.setToParent();
+                }
                 
                 bInstance = true;
             }
