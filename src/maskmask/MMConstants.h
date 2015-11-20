@@ -34,6 +34,8 @@ namespace mm {
     
     static const int MM_TUTORIAL_TOOLSLIDE = 2;
     
+    static int RUNNING_ID = 0;
+    
     // things that have Helper entries
     enum HelperEntry {
         DEFAULT = 0,

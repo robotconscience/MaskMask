@@ -69,6 +69,8 @@ namespace mm {
 //        selectedComp = nullptr;
         fillColor.set(SHAPE_COLOR);
         selectedColor.set(SHAPE_COLOR_SELECTED);
+        
+        myId = RUNNING_ID++;
     }
     
     //--------------------------------------------------------------
@@ -435,6 +437,10 @@ namespace mm {
     //--------------------------------------------------------------
     void Shape::setFillColor( ofColor fill ){
         fillColor.set(fill);
+        
+        fillColor.setHue(ofWrap(fillColor.getHue() + myId * 10,0,255));
+        selectedColor.set(fillColor);
+        selectedColor.a = 100;
     }
     
     //--------------------------------------------------------------

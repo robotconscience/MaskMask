@@ -132,5 +132,7 @@ namespace mm {
         
         ofColor fillColor, selectedColor;
         
+        int myId;
+        
     };
 }

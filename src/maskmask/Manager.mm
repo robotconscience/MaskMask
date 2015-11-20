@@ -116,6 +116,7 @@ namespace mm {
                 if ( !bKeepGoing ){
                     Mode newMode = MODE_ADD;
                     ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
+                    setMode(newMode);
                 }
             }
                 break;
@@ -239,6 +240,7 @@ namespace mm {
                 if ( e.key == OF_KEY_RETURN){
                     Mode newMode = MODE_EDIT;
                     ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
+                    setMode(newMode);
                 }
             }
                 break;
@@ -296,6 +298,7 @@ namespace mm {
                             if ( p == &currentShape->getPoints()[0] ){
                                 Mode newMode = MODE_EDIT;
                                 ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
+                                setMode(newMode);
                             }
                         }
                     }
@@ -321,6 +324,7 @@ namespace mm {
                     if ( it.second->inside( e, currentMode ) ){
                         Mode newMode = MODE_RENDER;
                         ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
+                        setMode(newMode);
                         break;
                     }
                 }
