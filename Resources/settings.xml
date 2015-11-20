@@ -1,7 +1,7 @@
 <settings>
 	<settingsFile>../../../mask_settings.xml</settingsFile>
 	<welcome>
-		<didWelcome>1</didWelcome>
+		<didWelcome>0</didWelcome>
 		<timing>10000</timing>
 	</welcome>
 </settings>

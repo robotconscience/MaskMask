@@ -58,7 +58,7 @@ namespace mm {
         
         // load render shader
         renderShader.load("", ofToDataPath("shaders/render.frag"));
-        renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
+        renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
         
         // get this show on the road
         ofAddListener(ofEvents().keyPressed, this, &Manager::keyPressed);

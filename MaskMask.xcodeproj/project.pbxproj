@@ -90,6 +90,7 @@
 		0192029E1B93A536001CD172 /* settings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = settings.xml; sourceTree = "<group>"; };
 		019424B01B05171E0005861A /* MMConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MMConstants.h; path = maskmask/MMConstants.h; sourceTree = "<group>"; };
 		019424B41B051FDE0005861A /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = shaders; sourceTree = "<group>"; };
+		019B15F21BFF746A00B479F4 /* ofxCustomGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxCustomGLView.h; sourceTree = "<group>"; };
 		019BB0D31B04FF4500080418 /* Manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Manager.h; path = maskmask/Manager.h; sourceTree = "<group>"; };
 		019BB0D41B04FF8D00080418 /* Manager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Manager.mm; path = maskmask/Manager.mm; sourceTree = "<group>"; };
 		019CCE1B1B6AB1B90050DE75 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
@@ -198,6 +199,7 @@
 			children = (
 				01AC48041B8E4C2D008E6E39 /* ofxCocoaGLView.h */,
 				01AC48051B8E4C2D008E6E39 /* ofxCocoaGLView.mm */,
+				019B15F21BFF746A00B479F4 /* ofxCustomGLView.h */,
 			);
 			name = src;
 			path = ../../../addons/ofxCocoaGLView/src;
