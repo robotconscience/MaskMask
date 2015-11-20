@@ -1,3 +1,4 @@
+#import "Poco/Format.h"
 #import "MainView.h"
 #import "AppDelegate.h"
 
@@ -6,7 +7,21 @@
 //--------------------------------------------------------------
 - (void)setup
 {
-    ofSetDataPathRoot("../Resources/");
+    // this code is amazing, and from here:
+    // https://github.com/hideyukisaito/ofxBundleResources
+    
+    CFURLRef  bundleURL_ = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+    char buf_[4096];
+    
+    if (CFURLGetFileSystemRepresentation(bundleURL_, TRUE, (UInt8 *)buf_, 4096))
+    {
+        string path_ = buf_;
+        string str   = "";
+        ofSetDataPathRoot(Poco::format("%s/%s", path_, str));
+        path_.clear();
+    }
+    CFRelease(bundleURL_);
+    
     manager = new mm::Manager();
     [self setTranslucent:YES];
     manager->setAndConfigureWindow( [self window], self );
