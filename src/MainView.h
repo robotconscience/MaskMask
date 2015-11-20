@@ -38,4 +38,7 @@
 
 - (void) onChangeMode:(mm::Mode) newMode;
 
+// set which screen active
+- (void) setWhichScreen: (int) whichScreen;
+
 @end

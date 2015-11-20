@@ -1,5 +1,6 @@
 <settings>
 	<settingsFile>../../../mask_settings.xml</settingsFile>
+    <whichScreen>0</whichScreen>
 	<welcome>
 		<didWelcome>1</didWelcome>
 		<timing>10000</timing>

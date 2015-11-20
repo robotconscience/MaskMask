@@ -86,10 +86,8 @@
 - (void)windowResized:(NSSize)size
 {
     if ( manager ){
-        NSRect rect = rc::rectForMainScreen();
-        [[self window] setFrame:rect display:YES ];
-        
-        manager->resize( rect.size.width, rect.size.height );
+        mm::Settings & inst = mm::Settings::get();
+        [self setWhichScreen:inst.whichScreen];
     }
 }
 
@@ -180,6 +178,15 @@
 - (BOOL) canBecomeKeyView
 {
     return YES;
+}
+
+//--------------------------------------------------------------
+- (void) setWhichScreen: (int) whichScreen
+{
+    mm::Settings::get().whichScreen = whichScreen;
+    NSRect rect = rc::rectForScreen(whichScreen);
+    [[self window] setFrame:rect display:YES ];
+    manager->resize( rect.size.width, rect.size.height );
 }
 
 @end

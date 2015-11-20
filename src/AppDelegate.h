@@ -8,6 +8,7 @@
     IBOutlet ofxCocoaGLView* toolsView;
     IBOutlet NSColorWell * picker;
     IBOutlet NSMatrix * modeRadio;
+    IBOutlet NSSlider * screenSlider;
 }
 
 @property (assign) IBOutlet NSWindow *window;
@@ -22,6 +23,9 @@
 -(IBAction) load:(id) sender;
 -(IBAction) reload:(id) sender;
 -(IBAction) import:(id) sender;
+
+// advanced
+-(IBAction) changeScreen:(id)sender;
 
 -(void) showTools;
 -(void) hideTools;

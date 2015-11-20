@@ -98,6 +98,7 @@ namespace mm {
                 if (settings.load(ofToDataPath( "settings.xml" ))){
                     settings.setTo("settings");
                     inst.settingsFile = settings.getValue("settingsFile");
+                    inst.whichScreen = settings.getIntValue("whichScreen");
                     settings.setTo("welcome");
                     inst.bDidWelcome = settings.getBoolValue("didWelcome");
                     inst.welcomeMillis = settings.getIntValue("timing");
@@ -117,6 +118,7 @@ namespace mm {
             settings.addChild("settings");
             settings.setTo("settings");
             settings.addValue("settingsFile", inst.settingsFile);
+            settings.addValue("whichScreen", inst.whichScreen);
             settings.addChild("welcome");
             settings.setTo("welcome");
             settings.addValue("didWelcome", inst.bDidWelcome);
@@ -128,6 +130,7 @@ namespace mm {
         string  settingsFile;
         bool    bDidWelcome;
         int     welcomeMillis;
+        int     whichScreen;
         
     private:
         
