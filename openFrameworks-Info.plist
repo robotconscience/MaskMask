@@ -6,8 +6,6 @@
 	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>${ICON}</string>
 	<key>CFBundleIdentifier</key>
 	<string>cc.robotconscience.maskmask</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -18,6 +16,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>CFBundleIconFile</key>
+	<string>${ICON}</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>LSUIPresentationMode</key>
@@ -26,8 +26,6 @@
 	<string>NSApplication</string>
 	<key>LSUIElement</key>
 	<false/>
-	<key>NSHighResolutionCapable</key>
-	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Anonymous_Pro.ttf</string>

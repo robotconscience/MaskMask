@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ofxSvg.h"
+#include "ofxSvgLoader.h"
 #include "MMConstants.h"
 
 namespace mm {
@@ -10,12 +10,18 @@ namespace mm {
     class TutorialScreen {
     public:
         
+        TutorialScreen() :
+        bLoaded(false){
+            
+        }
+        
         void setup( string file ){
-            svg.load(file);
+            bLoaded = svg.load(file);
             alpha = 255;
         }
         
         void draw(){
+            if ( !bLoaded ) return;
             ofPushMatrix();
             
             // (hopefully) temp hack
@@ -39,7 +45,8 @@ namespace mm {
         
     protected:
         
-        ofxSVG svg;
+        ofxSvgLoader svg;
+        bool bLoaded;
     };
 
     class Tutorial {

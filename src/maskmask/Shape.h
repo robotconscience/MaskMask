@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 #include "MMConstants.h"
-#include "ofxSvg.h"
+#include "ofxSvgLoader.h"
 
 namespace mm {
     

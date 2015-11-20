@@ -1,1 +1,2 @@
-ofxCocoa
+ofxCocoaGLView
+ofxSvgLoader

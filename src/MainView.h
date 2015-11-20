@@ -24,7 +24,7 @@
 - (void)mouseReleased:(NSPoint)p button:(int)button;
 - (void)windowResized:(NSSize)size;
 
-- (void) changeMode:(int) whichMode;
+- (void) changeModeTo:(int) whichMode;
 - (void) newColor:(NSColor *) color;
 
 - (void) save;

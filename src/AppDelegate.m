@@ -19,7 +19,8 @@
 
 -(void)changeMode:(id)sender
 {
-    [mainView changeMode:[[sender selectedCell] tag]];
+    int mode = [[sender selectedCell] tag];
+    [mainView changeModeTo:mode];
 }
 
 -(void)changeColor:(id)sender

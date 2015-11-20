@@ -374,15 +374,12 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Shape::import( string svgFile ){
-        ofxSVG toImport;
-        toImport.load(svgFile);
-        if ( toImport.getNumPath() != 0 ){
-            for ( auto & p : toImport.getPaths() ){
+        ofxSvgLoader toImport;
+        bool loaded = toImport.load(svgFile);
+        if ( loaded ){
+            for ( auto & p : toImport.getElementsForType<ofxSvgPath>() ){
                 ofVec2f src;
-                for ( auto & c : p.getCommands() ){
-                    
-//                    cout << c.to << endl;
-//                    cout << c.type << endl;
+                for ( auto & c : p->path.getCommands() ){
                     
                     if ( c.type == ofPath::Command::close ){
 //                    } else if ( c.type == ofPath::Command::moveTo ){

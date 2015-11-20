@@ -92,7 +92,7 @@
 #pragma mark Interface Actions
 
 //--------------------------------------------------------------
-- (void) changeMode:(int) whichMode
+- (void) changeModeTo:(int) whichMode
 {
     manager->setMode( (mm::Mode) whichMode);
 }
