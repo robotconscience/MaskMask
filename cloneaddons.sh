@@ -8,4 +8,5 @@ cd ../../../addons
 PREFIX="git clone https://github.com/"
 
 # ui
-${PREFIX}HalfdanJ/ofxCocoaGLView.git
+${PREFIX}robotconscience/ofxCocoaGLView.git
+${PREFIX}NickHardeman/ofxSvgLoader
