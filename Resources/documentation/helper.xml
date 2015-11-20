@@ -1,0 +1,26 @@
+<help>
+	<entry>
+		<title>DEFAULT</title>
+		<copy>Hello. I'm Helper. Rollover something to get a tip!</copy>
+	</entry>
+	<entry>
+		<title>PREVIEW</title>
+		<copy>In this mode, you can move shapes and edit points. </copy>
+	</entry>
+	<entry>
+		<title>RENDER</title>
+		<copy>In this mode, you can move shapes and edit points. </copy>
+	</entry>
+	<entry>
+		<title>ADD SHAPES</title>
+		<copy>Click to add points and make a new shape. Click and drag to add bezier points. Hit "Enter" when done.</copy>
+	</entry>
+	<entry>
+		<title>DELETE</title>
+		<copy>In this mode, you can move shapes and edit points. </copy>
+	</entry>
+	<entry>
+		<title>EDIT SHAPES</title>
+		<copy>In this mode, you can move shapes and edit points. </copy>
+	</entry>
+</help>

@@ -13,6 +13,8 @@
 #include "ofxCocoaUtils.h"
 
 namespace mm {
+    
+    // aesthetic things
     static const int SHAPE_SQUARE_SIZE = 3;
     static const int SHAPE_SQUARE_SIZE_SELECTED = 6;
     static const int SHAPE_BEZIER_SIZE = 2;
@@ -31,6 +33,16 @@ namespace mm {
     static const float MM_RENDER_PREVIEW_ALPHA = .75;
     
     static const int MM_TUTORIAL_TOOLSLIDE = 2;
+    
+    // things that have Helper entries
+    enum HelperEntry {
+        DEFAULT = 0,
+        ADD_SHAPE,
+        EDIT_SHAPE,
+        DELETE,
+        RENDER,
+        PREVIEW
+    };
     
     // App Mode
     enum Mode {

@@ -77,6 +77,7 @@
 		019B16041BFF7CFA00B479F4 /* tools */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tools; path = Resources/tools; sourceTree = "<group>"; };
 		019B16051BFF7CFA00B479F4 /* tutorial */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tutorial; path = Resources/tutorial; sourceTree = "<group>"; };
 		019B16111BFF7E0400B479F4 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		019B16171BFFD12400B479F4 /* Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Helper.h; path = maskmask/Helper.h; sourceTree = "<group>"; };
 		09A417E5BDEE611F8E24B002 /* ofxCocoaUtils.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = ofxCocoaUtils.mm; path = src/maskmask/ofxCocoaUtils.mm; sourceTree = SOURCE_ROOT; };
 		2CE1CB5DCF4228611BA16CB7 /* AppDelegate.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = AppDelegate.h; path = src/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		33A074C70635C44A974FBAAB /* Manager.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Manager.h; path = src/maskmask/Manager.h; sourceTree = SOURCE_ROOT; };
@@ -212,10 +213,11 @@
 		E4A5E94C9B19DE72B77E1B07 /* maskmask */ = {
 			isa = PBXGroup;
 			children = (
+				A551B736464788B3BE3D9646 /* MMConstants.h */,
+				019B16171BFFD12400B479F4 /* Helper.h */,
 				33A074C70635C44A974FBAAB /* Manager.h */,
 				E46E652ED2192718FB7EC06F /* Manager.mm */,
 				45FF0D3B4A5CA35C95A8BE91 /* MaskMask.h */,
-				A551B736464788B3BE3D9646 /* MMConstants.h */,
 				7CCC868BABA14D76FAEFD72D /* ofxCocoaUtils.h */,
 				09A417E5BDEE611F8E24B002 /* ofxCocoaUtils.mm */,
 				A039A2260A923A96B78BF214 /* Shape.h */,

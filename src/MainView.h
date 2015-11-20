@@ -6,9 +6,11 @@
 #include "MaskMask.h"
 
 @interface MainView : ofxCocoaGLView {
-    mm::Manager * manager;
+    mm::Manager *   manager;
+    mm::Helper          helper;
     id delegate;
     id modeRadio;
+    id hTextField;
 }
 
 - (void)setup;
@@ -35,6 +37,7 @@
 
 - (void) setAppDelegate:(id) delegate;
 - (void) setModeRadio:(id) radio;
+- (void) setTextField: (id) textField;
 
 - (void) onChangeMode:(mm::Mode) newMode;
 

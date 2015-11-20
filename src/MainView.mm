@@ -27,6 +27,9 @@
     manager->setAndConfigureWindow( [self window], self );
     manager->setup();
     
+    // setup helper
+    helper.setup();
+    
     ofBackground(ofColor(0,0));
 }
 
@@ -182,11 +185,18 @@
     modeRadio = radio;
 }
 
+//--------------------------------------------------------------
+- (void) setTextField: (id) textField
+{
+    hTextField = textField;
+}
 
 //--------------------------------------------------------------
 - (void) onChangeMode:(mm::Mode) newMode
 {
     [modeRadio selectCellWithTag:(int) newMode];
+    NSString * str = [[NSString alloc] initWithUTF8String:helper.getEntry(newMode).c_str()];
+    [hTextField setStringValue:str];
 }
 
 //--------------------------------------------------------------
@@ -203,5 +213,6 @@
     [[self window] setFrame:rect display:YES ];
     manager->resize( rect.size.width, rect.size.height );
 }
+
 
 @end

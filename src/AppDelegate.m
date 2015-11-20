@@ -14,13 +14,13 @@
     [[picker colorPanel] setLevel:NSMainMenuWindowLevel+1];
     [mainView setAppDelegate:self];
     [mainView setModeRadio:modeRadio];
+    [mainView setTextField:helper];
     
     //
     
     int nscreens = [[NSScreen screens] count];
     if ( nscreens <= 1 ){
         [screenSlider setEnabled:NO];
-        NSLog(@"%i", nscreens);
     }
 }
 
@@ -39,7 +39,6 @@
 
 -(void)changeScreen:(id)sender
 {
-    NSLog(@"%i", [sender integerValue]);
     [mainView setWhichScreen:[sender integerValue]];
 }
 

@@ -9,6 +9,7 @@
     IBOutlet NSColorWell * picker;
     IBOutlet NSMatrix * modeRadio;
     IBOutlet NSSlider * screenSlider;
+    IBOutlet NSTextField * helper;
 }
 
 @property (assign) IBOutlet NSWindow *window;

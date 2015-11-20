@@ -70,6 +70,7 @@ namespace mm {
         
         ofAddListener(mm::Events::get().modeChanged, this, &Manager::onChangeMode);
         ofNotifyEvent( mm::Events::get().modeChanged, currentMode, this );
+        setMode(currentMode);
     }
     
     //--------------------------------------------------------------
@@ -526,6 +527,7 @@ namespace mm {
         } else if ( newMode > MODE_EDIT ){
             newMode = MODE_RENDER;
         }
+        setMode(newMode);
         ofNotifyEvent( mm::Events::get().modeChanged, newMode, this );
     }
     
@@ -537,7 +539,6 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Manager::onChangeMode( Mode & m ){
-        setMode(m);
         [glView onChangeMode:m];
     }
     
@@ -618,6 +619,7 @@ namespace mm {
                 [window setLevel:NSFloatingWindowLevel];
                 break;
         }
+        ofNotifyEvent( mm::Events::get().modeChanged, currentMode, this );
     }
     
     //--------------------------------------------------------------
