@@ -10,11 +10,54 @@
 
 namespace mm {
     
+#pragma mark Utils
+    
+    string cleanString( string aStr, string aReplace ) {
+        ofStringReplace( aStr, aReplace, "");
+        return aStr;
+    }
+    
+    ofRectangle loadSvgBounds( string aPathToSvg ) {
+        ofRectangle ret;
+        
+        ofFile mainXmlFile( aPathToSvg, ofFile::ReadOnly );
+        ofBuffer tMainXmlBuffer( mainXmlFile );
+        
+        Poco::XML::DOMParser parser;
+        Poco::XML::Document* document;
+        
+        try {
+            document = parser.parseMemory( tMainXmlBuffer.getData(), tMainXmlBuffer.size() );
+            document->normalize();
+        } catch( exception e ) {
+            short msg = atoi(e.what());
+            ofLogError() << "loadFromBuffer " << msg << endl;
+            if( document ) {
+                document->release();
+            }
+            return ret;
+        }
+        
+        if( document ) {
+            Poco::XML::Element *svgNode     = document->documentElement();
+            
+            Poco::XML::Attr* viewBoxNode = svgNode->getAttributeNode("viewbox");
+            
+            ret.x        = ofToFloat( cleanString( svgNode->getAttribute("x"), "px") );
+            ret.y        = ofToFloat( cleanString( svgNode->getAttribute("y"), "px" ));
+            ret.width    = ofToFloat( cleanString( svgNode->getAttribute("width"), "px" ));
+            ret.height   = ofToFloat( cleanString( svgNode->getAttribute("height"), "px" ));
+            document->release();
+        }
+        
+        return ret;
+    }
+    
 #pragma mark Shape
     
     //--------------------------------------------------------------
     Shape::Shape(){
-        path.setMode(ofPath::POLYLINES);
+        path.setMode(ofPath::COMMANDS);
         path.setFillColor(SHAPE_COLOR);
         selected = NULL;
         bMouseDown = false;
@@ -41,12 +84,12 @@ namespace mm {
         }
         if ( bChanged ){
             path.clear();
-            path.setMode(ofPath::POLYLINES);
+            path.setMode(ofPath::COMMANDS);
             
             debugLines.clear();
             
             int ind = 0;
-
+            
             for ( size_t i=0; i<points.size(); i++){
                 auto & p = points[i];
                 Point * prev = nullptr;
@@ -66,16 +109,18 @@ namespace mm {
                 if ( i == 0 ){
                     path.moveTo(p);
                 } else {
-                    if ( p.bUseBezier && prev != nullptr ){// n != nullptr && n->bUseBezier ){
-                        path.quadBezierTo(*prev, p.bezierB, p);
+                    if ( p.bUseBezier ){//&& prev != nullptr ){// n != nullptr && n->bUseBezier ){
+                        path.bezierTo(p.bezierA, p.bezierB, p);
                         
                         debugLines.push_back(ofPath());
                         debugLines.back().lineTo(p.bezierA);
                         debugLines.back().lineTo(p);
                         debugLines.back().lineTo(p.bezierB);
-                    } else if ( prev != nullptr && prev->bUseBezier ){
-                        path.quadBezierTo(*prev, prev->bezierA, p);
+//                    } else if ( prev != nullptr && prev->bUseBezier ){
+//                        path.bezierTo(*prev, prev->bezierA, p);
                         
+                    } else if ( prev != nullptr && prev->bUseBezier && !p.bUseBezier ) {
+                        path.bezierTo(p, p, p);
                     } else {
                         path.lineTo(p);
                     }
@@ -83,22 +128,34 @@ namespace mm {
             }
             
             // draw "next" preview
+            bool bNext = false;
             if ( nextPoint != ofVec2f(-1,-1) && drawMode == MODE_ADD ){
-                path.lineTo(nextPoint);
+                if ( prevPoint.bUseBezier ) {
+                    path.bezierTo(nextPoint, nextPoint, nextPoint);
+                } else {
+                    path.lineTo(nextPoint);
+                }
+                bNext = true;
             }
             
             // close path
             if ( points.size() != 0 ){
                 auto & p = points[0];
-                auto & e = points[points.size()-1];
+                auto & e = !bNext ? points[points.size()-1] : nextPoint;
                 if ( p.bUseBezier ){
-                    path.quadBezierTo(e, p.bezierA, p);
+                    path.bezierTo(p.bezierA, p.bezierB, p);
+                    
+                    debugLines.push_back(ofPath());
+                    debugLines.back().lineTo(p.bezierA);
+                    debugLines.back().lineTo(p);
+                    debugLines.back().lineTo(p.bezierB);
+                    
                 } else if ( e.bUseBezier ){
-                    path.quadBezierTo(e, e.bezierA, p);
+                    path.bezierTo(p,p, p);
                 } else {
-                    //                    path.lineTo(p);
+                    path.lineTo(p);
                 }
-//                path.close();
+                path.close();
             }
             bChanged  = false;
         }
@@ -114,9 +171,10 @@ namespace mm {
             
             ofPushStyle();
             bool bFlip = true;
+            ofNoFill();
             for (auto & v : points ){
                 ofSetColor(bFlip ? SHAPE_SQUARE_COLOR_A : SHAPE_SQUARE_COLOR_B );
-                ofDrawRectangle(v, SHAPE_SQUARE_SIZE, SHAPE_SQUARE_SIZE);
+                ofDrawCircle(v, SHAPE_SQUARE_SIZE);
                 if ( v.bUseBezier ){
                     ofSetColor(bFlip ? SHAPE_BEZIER_COLOR_A : SHAPE_BEZIER_COLOR_B);
                     ofDrawRectangle(v.bezierA, SHAPE_BEZIER_SIZE, SHAPE_BEZIER_SIZE);
@@ -125,6 +183,7 @@ namespace mm {
                 bFlip = !bFlip;
             }
             
+            ofFill();
             for (auto & path : debugLines ){
                 path.setFilled(false);
                 path.setStrokeWidth(1.);
@@ -134,11 +193,11 @@ namespace mm {
             
             ofPopStyle();
             if ( selected != NULL ){
-                ofDrawRectangle(*selected, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
+                ofDrawCircle(*selected, SHAPE_SQUARE_SIZE_SELECTED);
             }
             
             if ( drawMode == MODE_EDIT ){
-                ofDrawRectangle(pointToAdd, SHAPE_SQUARE_SIZE_SELECTED, SHAPE_SQUARE_SIZE_SELECTED);
+                ofDrawCircle(pointToAdd, SHAPE_SQUARE_SIZE_SELECTED);
             }
         }
         
@@ -149,11 +208,11 @@ namespace mm {
     void Shape::addVertex( const ofVec2f & p ){
         points.push_back(Point());
         points.back().set(p);
-        points.back().bezierA.set(p);
+        points.back().bezierA.set(points.size() == 1 ? p : prevPoint);
         points.back().bezierB.set(p);
         bChanged = true;
-        
         nextPoint.set(-1,-1);
+        prevPoint.set(p);
     }
     
     //--------------------------------------------------------------
@@ -215,6 +274,7 @@ namespace mm {
     bool Shape::mousePressed( ofMouseEventArgs & e, mm::Mode mode ){
         bool bFound = false;
         if ( mode == MODE_EDIT_DEL ){
+            // look for a point to delete
             for ( auto & v : points ){
                 if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
                     selected = &v;
@@ -242,6 +302,7 @@ namespace mm {
             }
             
         } else {
+            // selecting
             for ( auto & v : points ){
                 if ( v.distance(e) < SHAPE_SQUARE_SIZE ){
                     selected = &v;
@@ -305,10 +366,14 @@ namespace mm {
     
     //--------------------------------------------------------------
     void Shape::mouseDragged( ofMouseEventArgs & e, mm::Mode mode ){
+        
+        // set current point, if we have one
         if ( selected != NULL && bMouseDown ){
             selected->set(e);
             
             bChanged = true;
+            
+        // moving whole shape
         } else if ( bShapeSelected ){
             for ( auto & p : points ){
                 p += (e-pointPressed);
@@ -377,6 +442,11 @@ namespace mm {
         ofxSvgLoader toImport;
         bool loaded = toImport.load(svgFile);
         if ( loaded ){
+            // for some reason, SVGs are upside down (or our whole vp is?)
+            auto b = loadSvgBounds(svgFile);
+            ofPoint t(0, b.height);
+            ofPoint flip( 1, -1);
+            
             for ( auto & p : toImport.getElementsForType<ofxSvgPath>() ){
                 ofVec2f src;
                 for ( auto & c : p->path.getCommands() ){
@@ -386,9 +456,9 @@ namespace mm {
 //                        src.set(c.to);
                     } else {
                         points.push_back(Point());
-                        points.back().set( c.to );
-                        points.back().bezierA.set( c.cp1 );
-                        points.back().bezierB.set( c.cp2 );
+                        points.back().set(t +  c.to * flip );
+                        points.back().bezierA.set( t + c.cp1 * flip );
+                        points.back().bezierB.set( t+ c.cp2 * flip );
                         points.back().bUseBezier = c.type == ofPath::Command::bezierTo;
                     }
                 }
@@ -429,9 +499,9 @@ namespace mm {
             }
             
             if ( p.bUseBezier && prev != nullptr ){// n != nullptr && n->bUseBezier ){
-                segment.quadBezierTo(*prev, p.bezierB, p);
+                segment.bezierTo(*prev, p.bezierB, p);
 //            } else if ( prev != nullptr && prev->bUseBezier ){
-//                segment.quadBezierTo(*prev, prev->bezierA, p);
+//                segment.bezierTo(*prev, prev->bezierA, p);
                 
             } else {
                 segment.lineTo(p);
@@ -439,9 +509,9 @@ namespace mm {
             
             if ( next != nullptr ){
                 if ( next->bUseBezier  ){// n != nullptr && n->bUseBezier ){
-                    segment.quadBezierTo(p, next->bezierB, *next);
+                    segment.bezierTo(p, next->bezierB, *next);
                 } else if ( p.bUseBezier ){
-                    segment.quadBezierTo(p, p.bezierA, *next);
+                    segment.bezierTo(p, p.bezierA, *next);
                     
                 } else {
                     segment.lineTo(*next);
@@ -452,9 +522,9 @@ namespace mm {
                 auto & p = points[0];
                 auto & e = points[points.size()-1];
                 if ( p.bUseBezier ){
-                    segment.quadBezierTo(e, p.bezierA, p);
+                    segment.bezierTo(e, p.bezierA, p);
                 } else if ( e.bUseBezier ){
-                    segment.quadBezierTo(e, e.bezierA, p);
+                    segment.bezierTo(e, e.bezierA, p);
                 } else {
                     //                    path.lineTo(p);
                 }

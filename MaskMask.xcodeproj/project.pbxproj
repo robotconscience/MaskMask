@@ -13,7 +13,6 @@
 		019B16091BFF7CFD00B479F4 /* icon_task_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 019B15FE1BFF7CFA00B479F4 /* icon_task_black.png */; };
 		019B160A1BFF7CFD00B479F4 /* icon_task_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 019B15FF1BFF7CFA00B479F4 /* icon_task_white.png */; };
 		019B160B1BFF7CFD00B479F4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 019B16001BFF7CFA00B479F4 /* MainMenu.xib */; };
-		019B160C1BFF7CFD00B479F4 /* NoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 019B16011BFF7CFA00B479F4 /* NoWindow.xib */; };
 		019B160D1BFF7CFD00B479F4 /* settings.xml in Resources */ = {isa = PBXBuildFile; fileRef = 019B16021BFF7CFA00B479F4 /* settings.xml */; };
 		019B160E1BFF7CFD00B479F4 /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = 019B16031BFF7CFA00B479F4 /* shaders */; };
 		019B160F1BFF7CFD00B479F4 /* tools in Resources */ = {isa = PBXBuildFile; fileRef = 019B16041BFF7CFA00B479F4 /* tools */; };
@@ -73,7 +72,6 @@
 		019B15FE1BFF7CFA00B479F4 /* icon_task_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_task_black.png; path = Resources/icon_task_black.png; sourceTree = "<group>"; };
 		019B15FF1BFF7CFA00B479F4 /* icon_task_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_task_white.png; path = Resources/icon_task_white.png; sourceTree = "<group>"; };
 		019B16001BFF7CFA00B479F4 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainMenu.xib; path = Resources/MainMenu.xib; sourceTree = "<group>"; };
-		019B16011BFF7CFA00B479F4 /* NoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = NoWindow.xib; path = Resources/NoWindow.xib; sourceTree = "<group>"; };
 		019B16021BFF7CFA00B479F4 /* settings.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = settings.xml; path = Resources/settings.xml; sourceTree = "<group>"; };
 		019B16031BFF7CFA00B479F4 /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = Resources/shaders; sourceTree = "<group>"; };
 		019B16041BFF7CFA00B479F4 /* tools */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tools; path = Resources/tools; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 				019B15FE1BFF7CFA00B479F4 /* icon_task_black.png */,
 				019B15FF1BFF7CFA00B479F4 /* icon_task_white.png */,
 				019B16001BFF7CFA00B479F4 /* MainMenu.xib */,
-				019B16011BFF7CFA00B479F4 /* NoWindow.xib */,
 				019B16021BFF7CFA00B479F4 /* settings.xml */,
 				019B16031BFF7CFA00B479F4 /* shaders */,
 				019B16041BFF7CFA00B479F4 /* tools */,
@@ -375,7 +372,6 @@
 				019B16091BFF7CFD00B479F4 /* icon_task_black.png in Resources */,
 				019B160A1BFF7CFD00B479F4 /* icon_task_white.png in Resources */,
 				019B160B1BFF7CFD00B479F4 /* MainMenu.xib in Resources */,
-				019B160C1BFF7CFD00B479F4 /* NoWindow.xib in Resources */,
 				019B160D1BFF7CFD00B479F4 /* settings.xml in Resources */,
 				019B160E1BFF7CFD00B479F4 /* shaders in Resources */,
 				019B160F1BFF7CFD00B479F4 /* tools in Resources */,

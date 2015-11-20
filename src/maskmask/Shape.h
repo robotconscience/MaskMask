@@ -14,6 +14,17 @@
 
 namespace mm {
     
+    /****************************************************
+        UTILS
+    ****************************************************/
+    
+    string cleanString( string aStr, string aReplace );
+    ofRectangle loadSvgBounds( string aPathToSvg );
+    
+    /****************************************************
+        POINTS
+    ****************************************************/
+    
     enum PointMode {
         EDIT_POINT = 0,
         EDIT_BEZIER,
@@ -31,7 +42,7 @@ namespace mm {
             switch ( mode ){
                 case EDIT_BEZIER: {
                     
-                    bezierA.set(next);
+//                    bezierA.set(next);
                     ofVec2f dist = *this + (*this - next);
                     
                     bezierB.set(dist);
@@ -111,7 +122,7 @@ namespace mm {
         
         vector<Point> points;
         vector<ofPath> debugLines;
-        Point nextPoint;
+        Point nextPoint, prevPoint;
         
         ofVec2f pointToAdd;
         unsigned int nearestIndex;

@@ -83,14 +83,14 @@ namespace mm {
         [this->window setBackgroundColor:[NSColor clearColor]];
         [this->window setOpaque:NO];
         [this->window setIgnoresMouseEvents:YES];
-        NSRect rect = rc::rectForAllScreens();
+        NSRect rect = rc::rectForMainScreen();
         [this->window setFrame:rect display:YES ];
     }
     
     //--------------------------------------------------------------
     void Manager::update( ){
         if ( bNeedToResize ){
-            renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 0);
+            renderFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
         }
         
         // clean up shapes
@@ -190,6 +190,13 @@ namespace mm {
     //--------------------------------------------------------------
     // Window methods
     //--------------------------------------------------------------
+    
+    //--------------------------------------------------------------
+    void Manager::resize( float width, float height ){
+        bNeedToResize = false;
+        
+        renderFbo.allocate(width, height, GL_RGBA, 8);
+    }
     
     //--------------------------------------------------------------
     void Manager::keyPressed( ofKeyEventArgs & e ){

@@ -13,9 +13,9 @@
 #include "ofxCocoaUtils.h"
 
 namespace mm {
-    static const int SHAPE_SQUARE_SIZE = 10;
-    static const int SHAPE_SQUARE_SIZE_SELECTED = 12;
-    static const int SHAPE_BEZIER_SIZE = 5;
+    static const int SHAPE_SQUARE_SIZE = 3;
+    static const int SHAPE_SQUARE_SIZE_SELECTED = 6;
+    static const int SHAPE_BEZIER_SIZE = 2;
     
     static const ofColor SHAPE_SQUARE_COLOR_A(0,255,0);
     static const ofColor SHAPE_SQUARE_COLOR_B(0,0,255);

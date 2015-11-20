@@ -34,6 +34,7 @@ namespace mm {
         
         // hack-y, for now!
         void setAndConfigureWindow( NSWindow * window, NSView * view );
+        void resize( float width, float height );
         
         void update();
         void draw();
