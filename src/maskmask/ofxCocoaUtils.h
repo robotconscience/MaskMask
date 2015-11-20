@@ -17,8 +17,8 @@ namespace rc {
     NSScreen *screen(int screenIndex);
     NSScreen *mainScreen( NSWindow * window );
     NSRect rectForScreen(int screenIndex);
-    NSRect rectForCurrentScreen();
-    NSRect rectForMainScreen( NSWindow * window );
+    NSRect rectForCurrentScreen( NSWindow * window );
+    NSRect rectForMainScreen();
     NSRect rectForAllScreens();
     
     void setWindowPosition( NSWindow * window, NSView * view, const ofPoint & position );

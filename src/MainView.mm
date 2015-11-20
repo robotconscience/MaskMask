@@ -63,7 +63,6 @@
 //--------------------------------------------------------------
 - (void)mouseMoved:(NSPoint)p
 {
-	
 }
 
 //--------------------------------------------------------------
@@ -86,7 +85,12 @@
 //--------------------------------------------------------------
 - (void)windowResized:(NSSize)size
 {
-	
+    if ( manager ){
+        NSRect rect = rc::rectForMainScreen();
+        [[self window] setFrame:rect display:YES ];
+        
+        manager->resize( rect.size.width, rect.size.height );
+    }
 }
 
 #pragma mark Interface Actions
