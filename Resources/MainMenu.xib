@@ -268,7 +268,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSOpenGLView" id="712021889">
@@ -276,7 +276,6 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrameSize">{17, 10}</string>
 							<reference key="NSSuperview" ref="439893737"/>
-							<reference key="NSWindow"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 								<object class="NSMutableData" key="NSPixelAttributes">
@@ -286,8 +285,6 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{10, 10}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="712021889"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 877}}</string>
@@ -311,7 +308,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="878949604">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSTextField" id="613250697">
@@ -319,7 +316,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{9, 334}, {162, 22}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="196339953"/>
 							<string key="NSReuseIdentifierKey">_NS:526</string>
 							<string key="NSHuggingPriority">{251, 750}</string>
@@ -353,7 +349,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{9, 153}, {163, 22}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="34901587"/>
 							<string key="NSReuseIdentifierKey">_NS:526</string>
 							<string key="NSHuggingPriority">{251, 750}</string>
@@ -377,7 +372,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{9, 91}, {163, 22}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="642617702"/>
 							<string key="NSReuseIdentifierKey">_NS:526</string>
 							<string key="NSHuggingPriority">{251, 750}</string>
@@ -404,7 +398,6 @@
 							</set>
 							<string key="NSFrame">{{9, 121}, {163, 23}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="352754968"/>
 							<string key="NSReuseIdentifierKey">_NS:1609</string>
 							<bool key="NSEnabled">YES</bool>
@@ -420,7 +413,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{9, 10}, {163, 71}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
-							<reference key="NSWindow"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<string key="NSAntiCompressionPriority">{250, 750}</string>
 							<bool key="NSEnabled">YES</bool>
@@ -453,7 +445,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{9, 183}, {162, 143}}</string>
 							<reference key="NSSuperview" ref="878949604"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="135577318"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
@@ -533,7 +524,7 @@
 									<int key="NSAuxButtonType">6</int>
 								</object>
 							</array>
-							<string key="NSCellSize">{162, 27}</string>
+							<string key="NSCellSize">{85, 21}</string>
 							<string key="NSIntercellSpacing">{4, 2}</string>
 							<int key="NSMatrixFlags">1151868928</int>
 							<string key="NSCellClass">NSActionCell</string>
@@ -575,8 +566,6 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{183, 367}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="613250697"/>
 					<string key="NSReuseIdentifierKey">_NS:20</string>
 				</object>
@@ -1144,156 +1133,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">673</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">AppDelegate</string>
-					<string key="superclassName">NSObject</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="changeColor:">id</string>
-						<string key="changeMode:">id</string>
-						<string key="import:">id</string>
-						<string key="load:">id</string>
-						<string key="openPanel:">id</string>
-						<string key="reload:">id</string>
-						<string key="save:">id</string>
-						<string key="saveAs:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="changeColor:">
-							<string key="name">changeColor:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="changeMode:">
-							<string key="name">changeMode:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="import:">
-							<string key="name">import:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="load:">
-							<string key="name">load:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="openPanel:">
-							<string key="name">openPanel:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="reload:">
-							<string key="name">reload:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="save:">
-							<string key="name">save:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="saveAs:">
-							<string key="name">saveAs:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="mainView">ofxCocoaGLView</string>
-						<string key="modeRadio">NSMatrix</string>
-						<string key="picker">NSColorWell</string>
-						<string key="toolsView">ofxCocoaGLView</string>
-						<string key="window">NSWindow</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="mainView">
-							<string key="name">mainView</string>
-							<string key="candidateClassName">ofxCocoaGLView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="modeRadio">
-							<string key="name">modeRadio</string>
-							<string key="candidateClassName">NSMatrix</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="picker">
-							<string key="name">picker</string>
-							<string key="candidateClassName">NSColorWell</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="toolsView">
-							<string key="name">toolsView</string>
-							<string key="candidateClassName">ofxCocoaGLView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="window">
-							<string key="name">window</string>
-							<string key="candidateClassName">NSWindow</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../src/AppDelegate.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">AppDelegate</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="import:">id</string>
-						<string key="load:">id</string>
-						<string key="openPanel:">id</string>
-						<string key="reload:">id</string>
-						<string key="save:">id</string>
-						<string key="saveAs:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="import:">
-							<string key="name">import:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="load:">
-							<string key="name">load:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="openPanel:">
-							<string key="name">openPanel:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="reload:">
-							<string key="name">reload:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="save:">
-							<string key="name">save:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="saveAs:">
-							<string key="name">saveAs:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../src/AppDelegate.m</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">MainView</string>
-					<string key="superclassName">ofxCocoaGLView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../src/MainView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">ToolsView</string>
-					<string key="superclassName">ofxCocoaGLView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../src/ToolsView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">ofxCocoaGLView</string>
-					<string key="superclassName">NSOpenGLView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../../../../addons/ofxCocoaGLView/src/ofxCocoaGLView.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">NO</bool>
